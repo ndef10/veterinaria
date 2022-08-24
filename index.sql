@@ -8,9 +8,9 @@ CREATE TABLE tutor(
     telefono VARCHAR(15),
     correo_tutor VARCHAR(50) NOT NULL,
     contrasena_tutor VARCHAR(25) NOT NULL,
-    mascota_id SERIAL,
+    mascota_id INT,
     FOREIGN KEY(mascota_id) REFERENCES animal (id_mascota),
-    tipo_mascota SERIAL,
+    tipo_mascota INT,
     FOREIGN KEY(tipo_mascota) REFERENCES tipo_animal (id_tipo_animal)
 );
 
