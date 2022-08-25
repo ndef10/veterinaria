@@ -30,6 +30,11 @@ VALUES
 ('Carlos Aguilera','12123123-8', 'joseph-gonzalez-iFgRcqHznqg-unsplash.jpg','+56229644791', 'carlosaguileramo@hotmail.com', '123',5,1),
 ('Catalina Rojo','12123123-8', 'gabriel-silverio-u3WmDyKGsrY-unsplash.jpg', '+56229644791','ikis_rojos@hotmail.com','123',6,1);
 
+INSERT INTO tutor 
+(nombre_tutor, cedula_de_identidad, foto_tutor, telefono, correo_tutor, contrasena_tutor, mascota_id, tipo_mascota)
+VALUES
+('Marcela Defranchi','12123123-8', 'art-hauntington-jzY0KRJopEI-unsplasian-dooley-d1UPkiFd04A-unsplash.jpgh.jpg','+56229644791', 'nodemailerMD@gmail.com','123',1,1);
+
 CREATE TABLE animal(
     id_mascota SERIAL PRIMARY KEY,
     nombre_mascota VARCHAR(25) NOT NULL,
