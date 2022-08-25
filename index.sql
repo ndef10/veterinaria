@@ -4,6 +4,7 @@ CREATE DATABASE veterinaria;
 CREATE TABLE tutor(
     id SERIAL PRIMARY KEY,
     nombre_tutor VARCHAR(50) NOT NULL,
+    cedula_de_identidad VARCHAR(10) NOT NULL,
     foto_tutor VARCHAR(255) NOT NULL,
     telefono VARCHAR(15),
     correo_tutor VARCHAR(50) NOT NULL,
@@ -15,19 +16,19 @@ CREATE TABLE tutor(
 );
 
 veterinaria=# select * from tutor;
- id | nombre_tutor | foto_tutor | telefono | correo_tutor | contrasena_tutor | mascota_id | tipo_mascota 
-----+--------------+------------+----------+--------------+------------------+------------+--------------
+ id | nombre_tutor | cedula_de_identidad | foto_tutor | telefono | correo_tutor | contrasena_tutor | mascota_id | tipo_mascota 
+----+--------------+---------------------+------------+----------+--------------+------------------+------------+--------------
 (0 filas)
 
 INSERT INTO tutor 
-(nombre_tutor, foto_tutor, telefono, correo_tutor, contrasena_tutor, mascota_id, tipo_mascota)
+(nombre_tutor, cedula_de_identidad, foto_tutor, telefono, correo_tutor, contrasena_tutor, mascota_id, tipo_mascota)
 VALUES
-('Maritza Abarca','art-hauntington-jzY0KRJopEI-unsplasian-dooley-d1UPkiFd04A-unsplash.jpgh.jpg','+56229644791', 'maetillanes@hotmail.com','123',1,1),
-('Ovaldo Abrigo','ian-dooley-d1UPkiFd04A-unsplash.jpg','+56229644791', 'osoabarca@hotmail.com','123',2,1),
-('Camila Abrigo','edward-cisneros-_H6wpor9mjs-unsplash.jpg','+56229644791', 'cabrigor@garmendia.cl','123',3,1),
-('Francisca Abumohor','mateus-campos-felipe-JoM_lC1WAnE-unsplash.jpg','+56229644791', 'fran.afulle@live.cl','123',4,1),
-('Carlos Aguilera','joseph-gonzalez-iFgRcqHznqg-unsplash.jpg','+56229644791', 'carlosaguileramo@hotmail.com', '123',5,1),
-('Catalina Rojo','gabriel-silverio-u3WmDyKGsrY-unsplash.jpg', '+56229644791','ikis_rojos@hotmail.com','123',6,1);
+('Maritza Abarca','12123123-8', 'art-hauntington-jzY0KRJopEI-unsplasian-dooley-d1UPkiFd04A-unsplash.jpgh.jpg','+56229644791', 'maetillanes@hotmail.com','123',1,1),
+('Ovaldo Abrigo','12123123-8', 'ian-dooley-d1UPkiFd04A-unsplash.jpg','+56229644791', 'osoabarca@hotmail.com','123',2,1),
+('Camila Abrigo','12123123-8', 'edward-cisneros-_H6wpor9mjs-unsplash.jpg','+56229644791', 'cabrigor@garmendia.cl','123',3,1),
+('Francisca Abumohor','12123123-8', 'mateus-campos-felipe-JoM_lC1WAnE-unsplash.jpg','+56229644791', 'fran.afulle@live.cl','123',4,1),
+('Carlos Aguilera','12123123-8', 'joseph-gonzalez-iFgRcqHznqg-unsplash.jpg','+56229644791', 'carlosaguileramo@hotmail.com', '123',5,1),
+('Catalina Rojo','12123123-8', 'gabriel-silverio-u3WmDyKGsrY-unsplash.jpg', '+56229644791','ikis_rojos@hotmail.com','123',6,1);
 
 CREATE TABLE animal(
     id_mascota SERIAL PRIMARY KEY,
@@ -89,6 +90,7 @@ VALUES
 CREATE TABLE veterinario(
     id_especialista SERIAL PRIMARY KEY,
     nombre_especialista VARCHAR(50) NOT NULL,
+    cedula_de_identidad VARCHAR(10) NOT NULL,
     correo_especialista VARCHAR(50) NOT NULL,
     contrasena_especialista VARCHAR(25)NOT NULL,
     foto_especialista VARCHAR(255) NOT NULL,
@@ -98,20 +100,20 @@ CREATE TABLE veterinario(
 );
 
 veterinaria=# select * from veterinario;
- id_especialista | nombre_especialista | correo_especialista | contrasena_especialista | foto_especialista | especialidad | credenciales 
------------------+---------------------+---------------------+-------------------------+-------------------+--------------+--------------
+ id_especialista | nombre_especialista | cedula_de_identidad | correo_especialista | contrasena_especialista | foto_especialista | especialidad | credenciales 
+-----------------+---------------------+---------------------+---------------------+-------------------------+-------------------+--------------+--------------
 (0 filas)
 
 INSERT INTO veterinario 
-(nombre_especialista, correo_especialista, contrasena_especialista, foto_especialista, especialidad, credenciales )
+(nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, foto_especialista, especialidad, credenciales )
 VALUES
-('Catalina Perez','cperez@veterinaria.com', '123', 'ani-kolleshi-7jjnJ-QA9fY-unsplash.jpg', 3, 'Universidad de Samoa'),
-('Rene Sarmiento', 'rsarmiento@veterinaria.com','123', 'austin-distel-7bMdiIqz_J4-unsplash.jpg', 2,'Universidad de Samoa'),
-('Mariana Shulz', 'mshulz@veterinaria.com','123', 'humberto-chavez-FVh_yqLR9eA-unsplash.jpg', 1, 'Universidad de Samoa'),
-('Pedro Aguilera', 'paguilera@veterinaria.com','123', 'karlo-tottoc-ybZ5hRxaWS4-unsplash.jpg', 1, 'Universidad de Samoa'),
-('Carlos Chavez', 'cchavez@veterinaria.com','123', 'marina-hanna-ZzEgfT9Fxn4-unsplash.jpg', 1,'Universidad de Samoa'),
-('Cristian Pardo','cpardo@veterinaria.com','123', 'sander-sammy-38Un6Oi5beE-unsplash.jpg', 2,'Universidad de Samoa'),
-('Felipe Acosta', 'facosta@veterinaria.com','123', 'usman-yousaf-pTrhfmj2jDA-unsplash.jpg', 1,'Universidad de Samoa');
+('Catalina Perez','12123123-8', 'marceladefranchi59@yahoo.es', '123', 'ani-kolleshi-7jjnJ-QA9fY-unsplash.jpg', 3, 'Universidad de Samoa'),
+('Rene Sarmiento','12123123-8', 'marceladefranchi59@yahoo.es','123', 'austin-distel-7bMdiIqz_J4-unsplash.jpg', 2,'Universidad de Samoa'),
+('Mariana Shulz','12123123-8', 'marceladefranchi59@yahoo.es','123', 'humberto-chavez-FVh_yqLR9eA-unsplash.jpg', 1, 'Universidad de Samoa'),
+('Pedro Aguilera','12123123-8', 'marceladefranchi59@yahoo.es','123', 'karlo-tottoc-ybZ5hRxaWS4-unsplash.jpg', 1, 'Universidad de Samoa'),
+('Carlos Chavez','12123123-8', 'marceladefranchi59@yahoo.es','123', 'marina-hanna-ZzEgfT9Fxn4-unsplash.jpg', 1,'Universidad de Samoa'),
+('Cristian Pardo','12123123-8', 'marceladefranchi59@yahoo.es','123', 'sander-sammy-38Un6Oi5beE-unsplash.jpg', 2,'Universidad de Samoa'),
+('Felipe Acosta','12123123-8', 'marceladefranchi59@yahoo.es','123', 'usman-yousaf-pTrhfmj2jDA-unsplash.jpg', 1,'Universidad de Samoa');
 
 
 CREATE TABLE tipo_animal(
