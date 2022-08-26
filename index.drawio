@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" scale="0.5" border="0">
     <diagram id="iE6qEzHiYXfZ3j9LID3-" name="Modelo conceptual">
-        <mxGraphModel dx="969" dy="468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1920" math="0" shadow="0">
+        <mxGraphModel dx="535" dy="367" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1920" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -234,7 +234,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="Inicio modelo lógico" id="D69tmYM4fXNlvvnJkglO">
-        <mxGraphModel dx="969" dy="468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="1390" math="0" shadow="0">
+        <mxGraphModel dx="535" dy="367" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="1390" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="hHqZHQeaDjUlf17yymRI-0"/>
                 <mxCell id="hHqZHQeaDjUlf17yymRI-1" parent="hHqZHQeaDjUlf17yymRI-0"/>
@@ -378,7 +378,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="Resultado de normalización" id="wtPwgygJyUGfW-qzV3mA">
-        <mxGraphModel dx="969" dy="468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="1390" math="0" shadow="0">
+        <mxGraphModel dx="535" dy="367" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="1390" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="BG7QxD9jQMTwQ4Rx9OvQ-0"/>
                 <mxCell id="BG7QxD9jQMTwQ4Rx9OvQ-1" parent="BG7QxD9jQMTwQ4Rx9OvQ-0"/>
@@ -604,7 +604,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="Modelo físico" id="PECxeTDxDadxnS9jZyd-">
-        <mxGraphModel dx="3378" dy="936" grid="1" gridSize="8" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+        <mxGraphModel dx="2455" dy="367" grid="1" gridSize="8" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="nTVq_EUTiUb8aFiGp7Zl-0"/>
                 <mxCell id="nTVq_EUTiUb8aFiGp7Zl-1" parent="nTVq_EUTiUb8aFiGp7Zl-0"/>
