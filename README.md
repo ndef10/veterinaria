@@ -33,3 +33,4 @@ dónde se ubicarán. (1 Punto)
 6. Instala las dependencias necesarias tales como: Handlebars, Framework CSS
 (Bootstrap, Tailwind, Foundation) o cualquier otra que vayas a utilizar. (1 Punto)
 
+
