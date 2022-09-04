@@ -1,0 +1,44 @@
+<style>#cabecera { width: 100%;}</style>
+<div class="py-4">
+  <h1>Lista de especialistas</h1>
+  <hr class="w-100"/>
+
+  <table class="table table-dark w-80 m-auto">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Foto</th>
+        <th scope="col">Nombre</th>        
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+
+    <tbody> 
+           
+      {{#each especialistas}}
+      <tr>
+        <td>{{@index}}</td>
+        <td>
+          <div>                
+            <img id="foto-perfil"src="{{this.foto}}" height="55" Width="75">                
+          </div>
+        </td>
+        <td>{{this.nombre}}<br>{{this.especialidad}}<br>{{this.credenciales}}<br></td>        
+        <td type="hidden">{{this.correo}}</td>
+        {{#if this.estado}}
+        <td class="text-success font-weight-bold" {{this.estado}}>Disponible</td>                          
+        {{else}}
+        <td class="text-warning font-weight-bold" {{this.estado}}>No disponible</td> 
+        {{/if}}       
+        
+      </tr>      
+      {{/each}}
+      
+    </tbody>
+  </table>
+  <div class="text-center">
+      <button class="btn btn-danger mb-2 mt-4 py-2 w-50 m-auto">Confirma tu selección</button> 
+  </div>
+    
+</div>
+  

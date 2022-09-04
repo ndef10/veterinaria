@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">  
+        <title>Consulta Veterinaria</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+        {{!-- bootstrap npm --}}
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+    
+        {{!-- axios cdn --}}
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+
+        {{!-- font awesome 5.9.0 --}}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+        integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        {{!-- bootstrap jquery --}}
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>   
+
+        {{!-- css  --}}
+        <link rel="stylesheet" href="/css/estilos.css">
+    </head>    
+
+    <div class="contenedor">            
+        {{> Menu }}
+        <header id="cabecera" class="text-light text-end py-5 mt col-7">
+
+        <div class="ms-auto col-12 col-md-7">            
+            <h1 class="display-1 fw bold my-5">
+            Preguntale a un  <br> Especialista
+            </h1>  
+        </div>
+    </div> 
+    
+    <body>
+        <div class="container">            
+            {{{body}}}            
+        </div>  
+    </body>
+
+    {{> footer }}
+</html>

@@ -1,0 +1,36 @@
+<div class="container-fluid">
+  <style>#cabecera { width: 100%;}</style></header>
+  
+  <div class="row">
+    <div class="col-5">
+      {{> relleno }} 
+      {{> relleno-texto }}
+    </div>
+
+    <div class="responsivo col-7 bg-black mt-5 py-5 text-center">
+      <h1>Registra a tu mascota{{this.nombreMascota}}</h1>
+      <br>
+
+      <form action="/reg-mascota" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <div class="form-group">
+          <div class="form-group py-3">
+            <input type="text" name="nombre" placeholder="Nombre de tu mascota" class="form-control w-50 m-auto" value={{this.nombreMascota}}>        
+          </div>
+          <div class="form-group py-4">        
+            <input type="text" name="especie" placeholder="Ejemplo: 'gato'" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group col-12 col-sm-12">
+            <p class=" text-white mb-2">Foto de perfil</p><br>            
+            <input type="file" name="foto_mascota" onchange="previewFile()"><br>
+            <img src="/" height="200" alt="image preview">
+          </div>      
+   
+          <button class="btn btn-danger my-4 py-2 w-50 m-auto">Siguiente</button>
+          <br>
+          <a href="./antecedentes">Completa sus antecedentes de salud</a></p>
+        </div>
+      </form>    
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <style>#cabecera { width: 100%;}</style>
+
+  <div class="row">
+    <div class="col-5">      
+      {{> relleno }} 
+      {{> relleno-texto }}    
+    </div>  
+
+    <div class="responsivo col-7 bg-black mt-5 py-5 text-center pt-5">
+      <h1>Antecedentes de salud {{this.nombreMascota}}</h1>
+      <br>
+
+      <form action="/antecedentes" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <div class="form-group">
+          <div class="form-group py-3">        
+            <input type="text" name="sintomas" placeholder="Sintomas" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group py-3">        
+            <input type="text" name="edad" placeholder="Edad" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group py-3">        
+            <input type="text" name="peso" placeholder="Peso" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group py-3">        
+            <input type="text" name="tipo_de_alimentacion" placeholder="Tipo de alimentación" class="form-control w-50 m-auto">
+          </div>
+        </div>
+          <select class="form-select mb-3 w-50 m-auto" aria-label="Default select example" >
+            <option selected>Tiene sus vacunas al día?</option>
+            <option value="1">Si</option>
+            <option value="2">No</option>
+          </select>
+
+          <select class="form-select mb-3 w-50 m-auto" aria-label="Default select example" >
+            <option selected>Está esterilizado?</option>
+            <option value="1">Si</option>
+            <option value="2">No</option>
+          </select>
+
+          <div class="form-group py-3 mb-3">        
+            <textarea class="form-control w-50 m-auto" name="operaciones_detalle" placeholder="Detalle de operaciones" rows="3"></textarea>
+          </div> 
+
+          <button class="btn btn-danger mb-2 py-2 w-50 m-auto">Guardar</button><br>  
+          <a href="./lista-especialistas">Elige un especialista</a></p>          
+      </form>
+    </div>
+  </div>
+</div>
+
