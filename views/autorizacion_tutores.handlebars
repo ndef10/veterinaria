@@ -1,0 +1,52 @@
+<style>#cabecera { width: 100%;}</style>
+<div class="py-4">
+  <h1>Autorización tutores</h1>
+  <hr class="w-100"/>
+
+  <table class="table table-dark w-80 m-auto">
+    <thead>
+      <tr>
+        <th scope="col">#</th>        
+        <th scope="col">Nombre</th>
+        <th scope="col">Cedula de identidad</th>                      
+        <th scope="col">Estado</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {{#each tutores}}
+      <tr>
+        <td>{{@index}}</td>        
+        <td>{{this.nombre_tutor}}</td>
+        <td>{{this.cedula_de_identidad}}</td>
+        
+        <td><input type="checkbox" {{#if this.estado}} checked {{/if}} onclick="autorizar({{this.cedula_de_identidad}}, this)"></td>
+      </tr>
+      {{/each}}
+
+    </tbody>
+  </table>
+</div>
+
+<script>
+
+  const autorizar = async (cedula_de_identidad, e) => {    
+    const estado = e.checked
+    console.log(cedula_de_identidad, estado);
+    try {
+      await axios.put('/autorizacion_tutores', {
+        cedula_de_identidad,
+        estado
+      })
+      alert(estado ? 'Tutor aprobado' : 'Tutor en revision')  
+    }
+    catch ({ respuesta }) {
+      const { data } = respuesta
+      const { error } = data
+      alert(error)
+    }    
+  }
+  
+</script>  

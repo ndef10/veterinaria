@@ -1,5 +1,5 @@
 require('dotenv').config();
-console.log(process.env)
+// console.log(process.env)
 const express = require('express');
 const exphbs = require('express-handlebars');
 const expressFileUpload = require('express-fileupload');
@@ -7,13 +7,19 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.SECRETKEY;
 const methodOverride = require('method-override');
-const flash = require('connect-flash');
 const session = require('express-session');
 
 const app = express();
 
 //base de datos
-const { nuevo_usuario} = require('./database');
+const { 
+    nuevo_tutor,
+    muestra_tutores, 
+    cambiar_estado_tutores, 
+    muestra_especialistas, 
+    cambiar_estado_especialistas
+
+} = require('./database');
 
 //servidor
 const puerto = process.env.PORT || 4000
@@ -25,28 +31,8 @@ app.listen(puerto, console.log('servidor en puerto:', puerto));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({extended: true}));
 
-//sesiones
-app.use(session({
-    secret: 'mysecretapp',
-    resave: true,
-    saveUninitialized: true
-}));
-
-//mensajes  bonitos al usuario
-app.use(flash());
-
-//variable global para flash
-app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    next();
-
-})
-
 //permite usar PUT o DELETE en lugares donde el cliente no lo admite
 app.use(methodOverride('_method'))
-
-
 
 //recibir payload de consultas put y post
 app.use(bodyParser.json());
@@ -110,7 +96,7 @@ app.get('/crear_cuenta_tutor', (req, res) => {
 app.post('/nuevo_tutor', async (req, res) => {
     const { nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, repita_contrasena, perfil } = req.body;
     const estado = false;    
-    console.log(req.body);
+    // console.log(req.body);
     
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('no se encontro ningun archivo en la consulta');
@@ -121,7 +107,7 @@ app.post('/nuevo_tutor', async (req, res) => {
     const foto_tutor = (`http://localhost:`+ puerto +`/uploads/${name}`);
     //falta cifrar contrasena antes de guardar en la base de datos y validar    
     try {
-        const usuario = await nuevo_usuario( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado );
+        const tutor = await nuevo_tutor( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado );
         foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
             if (err) return res.status(500).send({
                 error: `algo salio mal... ${err}`,
@@ -137,3 +123,65 @@ app.post('/nuevo_tutor', async (req, res) => {
         })       
     }           
 }) 
+
+//AUTORIZAR TUTORES
+
+//ruta que trae lista de tutores para su autorizacion
+app.get('/autorizacion_tutores', async (req, res) => {    
+    try {
+        const tutores = await muestra_tutores();   
+        res.render('autorizacion_tutores', { tutores });     
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        });        
+    }
+})
+
+//ruta put que cambia estado de tutores
+app.put('/autorizacion_tutores', async (req, res)=>{
+    const { estado, cedula_de_identidad } = req.body;
+    console.log(req.body)    
+    try {
+        const tutor = await cambiar_estado_tutores(estado, cedula_de_identidad);
+        res.status(200).send(JSON.stringify(tutor));
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })
+    }
+    
+})
+
+//AUTORIZAR ESPECIALISTAS
+
+//ruta que trae lista de especialistas para su autorizacion
+app.get('/autorizacion_especialistas', async (req, res) => {    
+    try {
+        const especialistas = await muestra_especialistas();   
+        res.render('autorizacion_especialistas', { especialistas });     
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        });        
+    }
+})
+
+//ruta put que cambia estado de especialistas
+app.put('/autorizacion_especialistas', async (req, res)=>{
+    const { estado, cedula_de_identidad } = req.body;
+    console.log(req.body)    
+    try {
+        const especialista = await cambiar_estado_especialistas(estado, cedula_de_identidad);
+        res.status(200).send(JSON.stringify(especialista));
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })
+    }
+    
+})

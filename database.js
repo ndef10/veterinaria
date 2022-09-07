@@ -10,15 +10,57 @@ const pool = new Pool({
 
 });
 
-const nuevo_usuario = async ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) => {    
-    const dbQuery = {
+//CREAR TUTORES
+
+const nuevo_tutor = async ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) => {    
+    const consulta = {
         text: 'INSERT INTO tutor ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
         values: [ nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado]
     }
-    const result = await pool.query(dbQuery);   
-    const usuario = result.rows[0];
-    return usuario;
+    const resultado = await pool.query(consulta);   
+    const tutor = resultado.rows[0];
+    return tutor;
 }
 
-module.exports = { nuevo_usuario };
+//AUTORIZAR TUTORES
+
+async function muestra_tutores() {
+    const resultado = await pool.query(`SELECT * FROM tutor`);
+    return resultado.rows;
+}
+
+async function cambiar_estado_tutores(estado, cedula_de_identidad) {
+    const consulta = {
+        text: 'UPDATE tutor SET estado = $1 WHERE cedula_de_identidad = $2 RETURNING *',
+        values: [estado, cedula_de_identidad]
+    };
+    const resultado = await pool.query(consulta);
+    const tutor = resultado.rows[0];
+    return tutor;
+}
+
+//AUTORIZAR ESPECIALISTAS
+
+async function muestra_especialistas() {
+    const resultado = await pool.query(`SELECT * FROM especialista`);
+    return resultado.rows;
+}
+
+async function cambiar_estado_especialistas(estado, cedula_de_identidad) {
+    const consulta = {
+        text: 'UPDATE especialista SET estado = $1 WHERE cedula_de_identidad = $2 RETURNING *',
+        values: [estado, cedula_de_identidad]
+    };
+    const resultado = await pool.query(consulta);
+    const especialista = resultado.rows[0];
+    return especialista;
+}
+
+module.exports = { 
+    nuevo_tutor, 
+    muestra_tutores, 
+    cambiar_estado_tutores, 
+    muestra_especialistas, 
+    cambiar_estado_especialistas
+};
 
