@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <style>#cabecera { width: 100%;}</style>
+
+  <div class="row">
+    <div class="col-5"> 
+      {{> relleno }} 
+      {{> relleno-texto }}      
+    </div> 
+
+    <div class="responsivo col-7 bg-black mt-5 py-5 text-center"> 
+      <h1>Inicio sesión</h1>
+      <h1>Especialista</h1>
+      <br>
+
+      <form action="/inicio_sesion_especialista" method="POST" enctype="multipart/form-data">
+      {{> card_logo}}
+        <div class="form-group">             
+          <div class="form-group pt-4">        
+            <input type="text" name="cedula_de_identidad" placeholder="Cedula de identidad" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group py-4">        
+            <input type="password" name="contrasena_especialista" placeholder="Contraseña" class="form-control w-50 m-auto" />
+          </div>
+        </div>  
+        <button class="btn btn-success mb-4 py-2 w-50 m-auto">Iniciar sesión</button>
+        <br>
+       
+        <p>¿No estás registrado? <a href="./crear">Crea tu cuenta</a></p>
+      </form>
+    </div>
+  </div>
+</div>

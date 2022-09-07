@@ -8,7 +8,7 @@
     </div>  
 
     <div class="responsivo col-7 bg-black mt-5 py-5 text-center">
-      <h1>Hola {{this.usuario.nombre}}!!</h1>
+      <h1>Hola {{this.nombre_especialista}}!!</h1>
       <h2>Crear cuenta especialista</h2>
       <br>
 
@@ -17,16 +17,19 @@
     
         <div class="form-group">
            <div class="form-group">       
-            <input type="text"  name="nombre" placeholder="Nombre" class="form-control w-50 m-auto" />
+            <input type="text"  name="nombre_especialista" placeholder="Nombre" class="form-control w-50 m-auto" />
           </div>
           <div class="form-group pt-5">       
             <input type="text" name="cedula_de_identidad" placeholder="ci" class="form-control w-50 m-auto" />
-          </div>
-          <div class="form-group pt-5">       
-            <input type="text" name="telefono" placeholder="Telefono" class="form-control w-50 m-auto" />
-          </div>
+          </div>          
           <div class="form-group pt-4">        
             <input type="text" name="correo_especialista" placeholder="Correo" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group pt-4">        
+            <input type="password" name="contrasena_especialista" placeholder="Contreseña" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group pt-4">        
+            <input type="password" name="repita_contrasena" placeholder="Repita contreseña" class="form-control w-50 m-auto">
           </div>
           <div class="form-group py-4">        
             <input type="text" name="credenciales" placeholder="Credenciales" class="form-control w-50 m-auto">
@@ -38,6 +41,13 @@
           <option value="2">Granja</option>
           <option value="3">Exótico</option>
         </select>
+
+        <div class="form-group col-12 col-sm-12">
+          <p class="text-white pb-3">Sube tu foto de perfil</p><br>            
+          <input type="file" name="foto" onchange="previewFile()"><br>
+          <img src="/" height="200" alt="image preview">
+        </div>
+
         <button class="btn btn-danger my-3 py- w-50 m-auto">Guardar</button>   
       </form>
     </div>

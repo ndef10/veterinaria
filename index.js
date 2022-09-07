@@ -14,11 +14,13 @@ const app = express();
 //base de datos
 const { 
     nuevo_tutor,
-    muestra_tutores, 
+    muestra_tutores,
+    nuevo_especialista,     
     cambiar_estado_tutores, 
     muestra_especialistas, 
     cambiar_estado_especialistas,
-    trae_tutor
+    trae_tutor,
+    trae_especialista
 
 } = require('./database');
 
@@ -114,7 +116,7 @@ app.post('/nuevo_tutor', async (req, res) => {
                 error: `algo salio mal... ${err}`,
                 code: 500
             })
-            res.redirect('/inicio_sesion');            
+            res.redirect('/inicio_sesion_tutor');            
         })       
            
     } catch (e) {
@@ -123,7 +125,46 @@ app.post('/nuevo_tutor', async (req, res) => {
             code: 500
         })       
     }           
-}) 
+})
+
+//CREAR CUENTA ESPECIALISTA
+
+//ruta get con formulario para crear cuenta especialista
+app.get('/crear_cuenta_especialista', (req, res) => {
+    res.render('crear_cuenta_especialista');
+})
+
+//ruta post para ingresar datos y crear nuevo tutor, debe redireccionar a inicio de sesion
+app.post('/nuevo_especialista', async (req, res) => {
+    const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales, perfil } = req.body;
+    const estado = false;    
+    // console.log(req.body);
+    
+    if (Object.keys(req.files).length == 0) {
+        return res.status(400).send('no se encontro ningun archivo en la consulta');
+    }  
+    const {files}=req
+    const { foto }= files;
+    const{name}= foto;    
+    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${name}`);
+    //falta cifrar contrasena antes de guardar en la base de datos y validar    
+    try {
+        const especialista = await nuevo_especialista( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, especialidad, credenciales, perfil, foto_especialista, estado );
+        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+            if (err) return res.status(500).send({
+                error: `algo salio mal... ${err}`,
+                code: 500
+            })
+            res.redirect('/inicio_sesion_especialista');            
+        })       
+           
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })       
+    }           
+})
 
 //AUTORIZAR TUTORES
 
@@ -190,12 +231,12 @@ app.put('/autorizacion_especialistas', async (req, res)=>{
 //INICIO SESION TUTOR
 
 //ruta get con formulario para inicio de sesion tutor
-app.get('/inicio_sesion', (req, res) => {
-    res.render('inicio_sesion');
+app.get('/inicio_sesion_tutor', (req, res) => {
+    res.render('inicio_sesion_tutor');
 })
 
 //ruta post inicio de sesion para tutor
-app.post('/inicio_sesion', async (req, res) => {
+app.post('/inicio_sesion_tutor', async (req, res) => {
     const { cedula_de_identidad, contrasena_tutor } = req.body; 
     //console.log(req.body)   
     const tutor = await trae_tutor(cedula_de_identidad, contrasena_tutor);   
@@ -223,6 +264,48 @@ app.post('/inicio_sesion', async (req, res) => {
 });
 
 //PERFIL TUTOR
+
+//ruta get con perfil de tutor 
+app.get('/perfil_tutor' , async (req, res) => {
+    res.render('perfil_tutor');
+});
+
+//INICIO SESION ESPECIALISTA
+
+//ruta get con formulario para inicio de sesion especialista
+app.get('/inicio_sesion_especialista', (req, res) => {
+    res.render('inicio_sesion_especialista');
+})
+
+//ruta post inicio de sesion para especialista
+app.post('/inicio_sesion_especialista', async (req, res) => {
+    const { cedula_de_identidad, contrasena_especialista } = req.body; 
+    //console.log(req.body)   
+    const especialista = await trae_especialista(cedula_de_identidad, contrasena_especialista);   
+    if(especialista) {
+        if (especialista.estado) {
+            const token = jwt.sign({
+                    exp: Math.floor(Date.now() / 1000) + 180,
+                    data: especialista,
+                },secretKey
+            );
+            res.redirect(`/perfil_especialista?token=${token}`);            
+            
+        } else {
+            res.status(401).send({
+                error: 'Este especialista se encuentra en evaluacion',
+                code: 401,
+            });
+        }                
+    } else {
+        res.status(404).send({
+            error: 'Este especialista no se ha registrado',
+            code: 404,
+        });
+    }
+});
+
+//PERFIL ESPECIALISTA
 
 //ruta get con perfil de tutor 
 app.get('/perfil_tutor' , async (req, res) => {

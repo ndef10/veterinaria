@@ -22,6 +22,18 @@ const nuevo_tutor = async ( nombre_tutor, cedula_de_identidad, telefono, correo_
     return tutor;
 }
 
+//CREAR ESPECIALISTAS
+
+const nuevo_especialista = async ( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, especialidad, credenciales, perfil, foto_especialista, estado ) => {    
+    const consulta = {
+        text: 'INSERT INTO especialista ( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, especialidad, credenciales, perfil, foto_especialista, estado ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+        values: [ nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, especialidad, credenciales, perfil, foto_especialista, estado]
+    }
+    const resultado = await pool.query(consulta);   
+    const especialista = resultado.rows[0];
+    return especialista;
+}
+
 //AUTORIZAR TUTORES
 
 async function muestra_tutores() {
@@ -67,12 +79,25 @@ async function trae_tutor(cedula_de_identidad, contrasena_tutor) {
     return result.rows[0];
 }
 
+// INICIO SESION ESPECIALISTA
+
+async function trae_especialista(cedula_de_identidad, contrasena_especialista) {
+    const consulta = {
+        text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1 AND contrasena_especialista = $2',
+        values: [cedula_de_identidad, contrasena_especialista]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
 module.exports = { 
-    nuevo_tutor, 
+    nuevo_tutor,
+    nuevo_especialista, 
     muestra_tutores, 
     cambiar_estado_tutores, 
     muestra_especialistas, 
     cambiar_estado_especialistas,
-    trae_tutor
+    trae_tutor,
+    trae_especialista
 };
 
