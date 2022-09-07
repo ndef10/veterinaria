@@ -56,11 +56,23 @@ async function cambiar_estado_especialistas(estado, cedula_de_identidad) {
     return especialista;
 }
 
+// INICIO SESION TUTOR
+
+async function trae_tutor(cedula_de_identidad, contrasena_tutor) {
+    const consulta = {
+        text: 'SELECT * FROM tutor WHERE cedula_de_identidad = $1 AND contrasena_tutor = $2',
+        values: [cedula_de_identidad, contrasena_tutor]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
 module.exports = { 
     nuevo_tutor, 
     muestra_tutores, 
     cambiar_estado_tutores, 
     muestra_especialistas, 
-    cambiar_estado_especialistas
+    cambiar_estado_especialistas,
+    trae_tutor
 };
 

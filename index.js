@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.SECRETKEY;
 const methodOverride = require('method-override');
-const session = require('express-session');
+// const session = require('express-session');
 
 const app = express();
 
@@ -17,7 +17,8 @@ const {
     muestra_tutores, 
     cambiar_estado_tutores, 
     muestra_especialistas, 
-    cambiar_estado_especialistas
+    cambiar_estado_especialistas,
+    trae_tutor
 
 } = require('./database');
 
@@ -185,3 +186,45 @@ app.put('/autorizacion_especialistas', async (req, res)=>{
     }
     
 })
+
+//INICIO SESION TUTOR
+
+//ruta get con formulario para inicio de sesion tutor
+app.get('/inicio_sesion', (req, res) => {
+    res.render('inicio_sesion');
+})
+
+//ruta post inicio de sesion para tutor
+app.post('/inicio_sesion', async (req, res) => {
+    const { cedula_de_identidad, contrasena_tutor } = req.body; 
+    //console.log(req.body)   
+    const tutor = await trae_tutor(cedula_de_identidad, contrasena_tutor);   
+    if(tutor) {
+        if (tutor.estado) {
+            const token = jwt.sign({
+                    exp: Math.floor(Date.now() / 1000) + 180,
+                    data: tutor,
+                },secretKey
+            );
+            res.redirect(`/perfil_tutor?token=${token}`);            
+            
+        } else {
+            res.status(401).send({
+                error: 'Este tutor se encuentra en evaluacion',
+                code: 401,
+            });
+        }                
+    } else {
+        res.status(404).send({
+            error: 'Este tutor no se ha registrado',
+            code: 404,
+        });
+    }
+});
+
+//PERFIL TUTOR
+
+//ruta get con perfil de tutor 
+app.get('/perfil_tutor' , async (req, res) => {
+    res.render('perfil_tutor');
+});
