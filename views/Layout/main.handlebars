@@ -4,8 +4,16 @@
     <head>
         <meta charset="UTF-8">  
         <title>Consulta Veterinaria</title>
+
+        {{!-- link para nombre --}}
+        <meta name="autor" content="Marcela Defranchi">
+
+        {{!-- link para media query --}}
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 
+        {{!-- link favicon --}}
+        <link rel= "shortcut icon" type="image/jpg" href="/uploads/iguana-3.jpg"/>
+        
         {{!-- bootstrap npm --}}
         <link rel="stylesheet" href="/css/bootstrap.min.css">
     
@@ -36,7 +44,9 @@
     </div> 
     
     <body>
-        <div class="container">            
+        <div class="container"> 
+            {{> mensajes}}
+            {{> errores}}           
             {{{body}}}            
         </div>  
     </body>

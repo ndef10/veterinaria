@@ -1,0 +1,73 @@
+<div class="container-fluid">
+  <style>#cabecera { width: 100%;}</style>
+  
+  <div class="row">
+    <div class="col-5">
+      {{> relleno }} 
+      {{> relleno-texto }}       
+    </div>
+
+    <div class="responsivo col-7 bg-black mt-5 text-center pt-5">
+      <h1>Hola {{nombre}}!!</h1>
+      <h2>Estos son tus datos de perfil</h2>
+      <h2>Ahora completa los datos de tu mascota</h2>
+      <br>
+
+      <form action="/perfil_tutor" method="POST" enctype="multipart/form-data">       
+        <div class="form-group">
+          <div class="form-group py-3">        
+            <input type="text" name="correo_tutor" placeholder="Correo" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group py-3">        
+            <input type="text" name="telefono" placeholder="+5694545456" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group mb-3 py-3">        
+            <input type="text" name="nombre_mascota" placeholder="Nombre de tu mascota" class="form-control w-50 m-auto">
+          </div>     
+        </div>
+
+        <select class="form-select mb-3 w-50 m-auto" name="tipo_mascota" aria-label="Default select example" >
+          <option selected>Selecciona tipo de mascota</option>
+          <option value="domestico">Domestico</option>
+          <option value="granja">Granja</option>
+          <option value="exotico">Exótico</option>
+        </select>
+
+        <div class="form-group col-12 col-sm-12">
+          <p class="text-white pb-3">Sube tu foto de perfil</p><br>            
+          <input type="file" name="foto" onchange="previewFile()"><br>
+          <img src="/" height="200" alt="image preview">
+        </div>
+
+        <button class="btn btn-danger my-3 pt-2 w-50 m-auto">Siguiente</button><br>
+        <a href="./reg-mascota">Registra tu mascota</a></p>
+    
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  function previewFile() {
+    const preview = document.querySelector('img');
+    const file = document.querySelector('input[type=file').files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener("load", () => {
+      preview.src = reader.result;
+    }, false);
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+  
+</script>
+
+
+
+
+
+
+

@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+//const bcrypt = require('bcryptjs');
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -9,12 +10,15 @@ const pool = new Pool({
 
 });
 
-const getDate = async () => {
-    const result = await pool.query("SELECT NOW()");
-    console.log(result);
-
+const nuevo_usuario = async ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) => {    
+    const dbQuery = {
+        text: 'INSERT INTO tutor ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+        values: [ nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado]
+    }
+    const result = await pool.query(dbQuery);   
+    const usuario = result.rows[0];
+    return usuario;
 }
-getDate()
 
-module.exports = { getDate };
+module.exports = { nuevo_usuario };
 

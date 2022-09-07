@@ -1,0 +1,55 @@
+<style>#cabecera { width: 100%;}</style>
+<div class="py-4">
+  <h1>Autorización usuarios</h1>
+  <hr class="w-100"/>
+
+  <table class="table table-dark w-80 m-auto">
+    <thead>
+      <tr>
+        <th scope="col">#</th>        
+        <th scope="col">Nombre</th>
+        <th scope="col">Cedula de identidad</th> 
+        <th scope="col">Perfil</th>              
+        <th scope="col">Estado</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {{#each usuarios}}
+      <tr>
+        <td>{{@index}}</td>        
+        <td>{{this.nombre}}</td>
+        <td>{{this.cedula_de_identidad}}</td>
+        <td>{{this.contrasena}}</td>
+        <td>{{this.perfil}}</td>     
+        
+        <td>{{this.estado}}</td>
+        <td><input type="checkbox" {{#if this.estado}} checked {{/if}} onclick="changeStatus({{this.cedula_de_identidad}}, this)"></td>
+      </tr>
+      {{/each}}
+
+    </tbody>
+  </table>
+</div>
+
+<script>
+
+  const changeStatus = async (cedula_de_identidad, e) => {
+    const estado = e.checked
+    try {
+      await axios.put('/autorizacion_usuarios', {
+        cedula_de_identidad,
+        estado
+      })
+      alert(estado ? 'Usuario aprobado' : 'Usuario en revision')  
+    }
+    catch ({ response }) {
+      const { data } = response
+      const { error } = data
+      alert(error)
+    }    
+  }
+  
+</script>  

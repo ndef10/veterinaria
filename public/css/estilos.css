@@ -75,6 +75,13 @@ body {
     overflow: hidden;
 }
 
+.logo {
+    width: 30%;
+    background-color: #030404;
+}
+.card_logo {
+    background-color: #030404;
+}
 #cabecera {
     background-image: url("../uploads/iguana-3.jpg");
     background-repeat: no-repeat;

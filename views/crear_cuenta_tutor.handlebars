@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <style>#cabecera { width: 100%;}</style>
+
+  <div class="row">
+    <div class="col-5"> 
+      {{> relleno }} 
+      {{> relleno-texto }}      
+    </div>    
+      
+    <div class="responsivo col-7 bg-black mt-5 py-5 text-center">      
+      <h1>Crear cuenta tutor</h1>
+      <br>
+
+      <form action="/nuevo_tutor" method="POST" enctype="multipart/form-data">
+      {{> card_logo}}
+      
+        <div class="form-group">
+          <div class="form-group">       
+            <input type="text"  name="nombre_tutor" placeholder="Nombre" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group pt-5">       
+            <input type="text" name="cedula_de_identidad" placeholder="ci" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group pt-5">       
+            <input type="text" name="telefono" placeholder="Telefono" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group pt-5">       
+            <input type="text" name="correo_tutor" placeholder="Correo" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group py-5">        
+            <input type="password" name="contrasena_tutor" placeholder="Contraseña" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group pb-5">        
+            <input type="password" name="repita_contrasena" placeholder="Repita contraseña" class="form-control w-50 m-auto" />
+          </div>           
+        </div>
+
+        {{!-- <select class="form-select mb-5 w-50 m-auto" name="perfil" aria-label="Default select example" >          
+          <option value="tutor">Tutor</option>
+          <option value="especialista">Especialista</option>
+        </select> --}}
+
+        <div class="form-group col-12 col-sm-12">
+          <p class="text-white pb-3">Sube tu foto de perfil</p><br>            
+          <input type="file" name="foto" onchange="previewFile()"><br>
+          <img src="/" height="200" alt="image preview">
+        </div>        
+
+        <button class="btn btn-success py-2 w-50 m-auto my-4">Crear cuenta</button>
+        <br>
+        <a href="./perfil">Completa tu perfil</a></p>
+      </form>      
+    </div>
+  </div>
+</div>
+
+
+
+

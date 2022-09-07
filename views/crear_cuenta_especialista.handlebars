@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <style>#cabecera { width: 100%;}</style>
+
+  <div class="row">
+    <div class="col-5">      
+      {{> relleno }} 
+      {{> relleno-texto }}    
+    </div>  
+
+    <div class="responsivo col-7 bg-black mt-5 py-5 text-center">
+      <h1>Hola {{this.usuario.nombre}}!!</h1>
+      <h2>Crear cuenta especialista</h2>
+      <br>
+
+      <form action="/nuevo_especialista" method="POST" enctype="multipart/form-data">
+      {{> card_logo}}  
+    
+        <div class="form-group">
+           <div class="form-group">       
+            <input type="text"  name="nombre" placeholder="Nombre" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group pt-5">       
+            <input type="text" name="cedula_de_identidad" placeholder="ci" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group pt-5">       
+            <input type="text" name="telefono" placeholder="Telefono" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group pt-4">        
+            <input type="text" name="correo_especialista" placeholder="Correo" class="form-control w-50 m-auto">
+          </div>
+          <div class="form-group py-4">        
+            <input type="text" name="credenciales" placeholder="Credenciales" class="form-control w-50 m-auto">
+          </div>         
+        </div>
+        <select class="form-select mb-3 w-50 m-auto" name="especialidad" aria-label="Default select example" >
+          <option selected>Selecciona tu especialidad</option>
+          <option value="1">Domestico</option>
+          <option value="2">Granja</option>
+          <option value="3">Exótico</option>
+        </select>
+        <button class="btn btn-danger my-3 py- w-50 m-auto">Guardar</button>   
+      </form>
+    </div>
+  </div>
+</div>
+
+

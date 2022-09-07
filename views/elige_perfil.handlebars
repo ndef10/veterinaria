@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <style>#cabecera { width: 100%;}</style>
+
+  <div class="row">
+    <div class="col-5"> 
+      {{> relleno }} 
+      {{> relleno-texto }}      
+    </div> 
+
+    <div class="responsivo col-7 bg-black mt-5 py-5 text-center"> 
+        <div class="jumbotron mt-5">
+            <h1 class="display-4">Unete a nuestra comunidad!!</h1>
+            <p class="lead">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos ex necessitatibus nihil iure perferendis blanditiis voluptas error aliquid reiciendis ducimus?</p>
+            <hr class="my-4">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime modi fuga aliquid. At tempora, doloribus obcaecati velit facilis cum enim.</p>
+            <a href="https://sp.depositphotos.com/free-files/animales.html" class="btn btn-primary btn-lg">Galeria</a>
+        </div>
+        <div class="responsivo col-12 bg-black mt-5 py-5 text-center"> 
+      <h1>Elige tu perfil</h1>
+      <br>
+
+      <form action="/elige_perfil" method="POST" enctype="multipart/form-data">
+      {{!-- <div class="card-logo mt-4 text-center">
+        <img src="/uploads/iguana-3.jpg" class="rounded-circle mx-auto d-block  m-4 logo" alt="Este es nuestro logo, pero no se ve">
+      </div> --}}
+        <div class="form-group">          
+
+          <select class="form-select mb-5 w-50 m-auto" name="perfil" aria-label="Default select example" >          
+            <option value="tutor">Tutor</option>
+            <option value="especialista">Especialista</option>
+          </select> 
+
+        </div>  
+        <button class="btn btn-success mb-4 py-2 w-50 m-auto">Siguiente</button>
+        <br>
+       
+        <p>¿No estás registrado? <a href="./crear">Crea tu cuenta</a></p>
+      </form>
+    </div>
+      {{!-- <h1>Inicia sesión</h1>
+      <br>
+
+      <form action="/" method="POST" enctype="multipart/form-data">
+        <div class="form-group">     
+          <div class="form-group pt-4">        
+            <input type="text" name="cedula_de_identidad" placeholder="Cedula de identidad" class="form-control w-50 m-auto" />
+          </div>
+          <div class="form-group py-4">        
+            <input type="password" name="contrasena" placeholder="Contraseña" class="form-control w-50 m-auto" />
+          </div>    
+        </div>  
+        <button class="btn btn-danger mb-4 py-2 w-50 m-auto">Iniciar sesión</button>
+        <br>
+       
+        <p>¿No estás registrado? <a href="./crear">Crea tu cuenta</a></p>
+      </form> --}}
+    </div>
+  </div>
+</div>

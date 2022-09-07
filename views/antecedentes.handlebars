@@ -11,8 +11,7 @@
       <h1>Antecedentes de salud {{this.nombreMascota}}</h1>
       <br>
 
-      <form action="/antecedentes" method="POST">
-        <input type="hidden" name="_method" value="PUT">
+      <form action="/antecedentes_de_salud" method="POST" enctype="multipart/form-data">        
         <div class="form-group">
           <div class="form-group py-3">        
             <input type="text" name="sintomas" placeholder="Sintomas" class="form-control w-50 m-auto">
@@ -44,7 +43,7 @@
           </div> 
 
           <button class="btn btn-danger mb-2 py-2 w-50 m-auto">Guardar</button><br>  
-          <a href="./lista-especialistas">Elige un especialista</a></p>          
+          <a href="./lista_especialistas">Elige un especialista</a></p>          
       </form>
     </div>
   </div>

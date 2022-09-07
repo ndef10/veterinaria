@@ -18,15 +18,20 @@
   },
   "homepage": "https://github.com/ndef10/veterinaria#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "bootstrap": "^5.2.0",
+    "connect-flash": "^0.1.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-fileupload": "^1.4.0",
     "express-handlebars": "^6.0.6",
+    "express-session": "^1.17.3",
     "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
     "nodemailer": "^6.7.8",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.8.0"
   }
 }
