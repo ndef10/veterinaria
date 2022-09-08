@@ -9,11 +9,11 @@ label {
     color: #ffffff;
 }
 /* espacio-foto-de-perfil-usuarios */
-#foto-perfil {
-    width: 95px;
-    height: 95px;
+#foto_perfil {
+    width: 150px;
+    height: 150px;
     margin: 20px;
-    border-radius: 95px 95px 95px 95px;
+    border-radius: 150px 150px 150px 150px;
 
 }
 /* relleno */

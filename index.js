@@ -139,7 +139,7 @@ app.post('/nuevo_especialista', async (req, res) => {
     const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales, perfil } = req.body;
     const estado = false;    
     // console.log(req.body);
-    
+    console.log(estado);
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('no se encontro ningun archivo en la consulta');
     }  
@@ -246,8 +246,8 @@ app.post('/inicio_sesion_tutor', async (req, res) => {
                     exp: Math.floor(Date.now() / 1000) + 180,
                     data: tutor,
                 },secretKey
-            );
-            res.redirect(`/perfil_tutor?token=${token}`);            
+            );             
+            res.redirect(`/perfil_tutor?token=${token}`);           
             
         } else {
             res.status(401).send({
@@ -265,10 +265,34 @@ app.post('/inicio_sesion_tutor', async (req, res) => {
 
 //PERFIL TUTOR
 
-//ruta get con perfil de tutor 
+//ruta get con perfil de tutor, redirecciona a registro de mascota
 app.get('/perfil_tutor' , async (req, res) => {
-    res.render('perfil_tutor');
+    const { token } = req.query;
+    jwt.verify(token, secretKey, (err, decoded) => {
+        const { data } = decoded;
+        const { nombre_tutor, cedula_de_identidad, telefono, correo_tutor, foto_tutor } = data;
+        console.log(data)       
+        err
+            ? res.status(401).send(
+                res.send({
+                    error: '401 Unauthorized',
+                    message: 'Usted no esta autorizado para estar aqui',
+                    token_error: err.message,
+                })
+            )
+            : res.render('perfil_tutor', { nombre_tutor, cedula_de_identidad, telefono, correo_tutor, foto_tutor });
+    });
 });
+
+
+
+//DATOS DE MASCOTA
+
+//ruta get con formulario para registro de mascota
+app.get('/registro_mascota', (req, res) => {
+    res.render('registro_mascota');
+})
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 //INICIO SESION ESPECIALISTA
 
@@ -307,7 +331,11 @@ app.post('/inicio_sesion_especialista', async (req, res) => {
 
 //PERFIL ESPECIALISTA
 
-//ruta get con perfil de tutor 
-app.get('/perfil_tutor' , async (req, res) => {
+//ruta get con perfil de especialista
+app.get('/perfil_especialista' , async (req, res) => {
     res.render('perfil_tutor');
 });
+
+
+
+
