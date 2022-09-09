@@ -101,6 +101,18 @@ async function actualizar_tutor(nombre_tutor, telefono, correo_tutor, cedula_de_
     return tutor;        
 }
 
+// REGISTRAR MASCOTA
+
+const nueva_mascota = async ( nombre_mascota, tipo_mascota, especie, foto_mascota ) => {    
+    const consulta = {
+        text: 'INSERT INTO mascota ( nombre_mascota, tipo_mascota, especie, foto_mascota ) VALUES ($1, $2, $3, $4) RETURNING *',
+        values: [ nombre_mascota, tipo_mascota, especie, foto_mascota]
+    }
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];
+    return mascota;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // INICIO SESION ESPECIALISTA
@@ -128,7 +140,6 @@ module.exports = {
     trae_especialista,
     eliminar_tutor,
     actualizar_tutor,
-    nueva_mascota,
-    antecedentes_salud
+    nueva_mascota
 };
 
