@@ -13,7 +13,7 @@
       <h2>Ahora completa los datos de tu mascota</h2>
       <br>
 
-      <form action="/actualizar/{{this.cedula_de_identidad}}?_method= PUT" method="POST" enctype="multipart/form-data">
+      <form action="/actualizar/{{this.cedula_de_identidad}}?_method=PUT" method="POST">
       <input type="hidden" name="_method" value="PUT">       
         <div class="form-group">
           <div>                
@@ -21,27 +21,36 @@
           </div>
           <div class="form-group py-3"> 
             <label>Nombre</label>       
-            <input type="text" name="nombre_tutor" placeholder="Correo" class="form-control w-50 m-auto" value="{{this.nombre_tutor}}"> 
+            <input type="text" name="nombre_tutor" class="form-control w-50 m-auto" value="{{this.nombre_tutor}}"> 
           </div>
           <div class="form-group py-3">  
             <label>Cedula de identidad</label>      
-            <input type="text" name="cedula_de_identidad" placeholder="Correo" class="form-control w-50 m-auto" value="{{this.cedula_de_identidad}}"> 
+            <input type="text" name="cedula_de_identidad" class="form-control w-50 m-auto" value="{{this.cedula_de_identidad}}"> 
           </div>
           <div class="form-group py-3">        
             <label>Telefono</label>
-            <input type="text" name="telefono" placeholder="Correo" class="form-control w-50 m-auto" value="{{this.telefono}}"> 
+            <input type="text" name="telefono" class="form-control w-50 m-auto" value="{{this.telefono}}"> 
           </div>
           <div class="form-group py-3"> 
             <label>Correo</label>       
-            <input type="text" name="correo_tutor" placeholder="Correo" class="form-control w-50 m-auto" value="{{this.correo_tutor}}"> 
-          </div>
-                     
-        </div>      
-
-        <button class="btn btn-success my-3 pt-2 w-50 m-auto">Siguiente</button><br>
-        <a href="./registro_mascota">Registra tu mascota</a></p>
-    
+            <input type="text" name="correo_tutor" class="form-control w-50 m-auto" value="{{this.correo_tutor}}"> 
+          </div>                    
+        </div>
+        <br>
+        <div>
+          <button type="submit" class="btn btn-success my-3 pt-2 w-50 m-auto">Actualizar</button><br>
+        </div>
       </form>
+      <div>
+        <form action="/eliminar/{{this.cedula_de_identidad}}?_method=DELETE" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger">Eliminar cuenta</button>    
+        </form>      
+      </div>
+        
+      {{!-- <a href="./registro_mascota">Registra tu mascota</a></p> --}}
+    
+    {{!-- </form> --}}
     </div>
   </div>
 </div>

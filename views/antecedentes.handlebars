@@ -7,40 +7,53 @@
       {{> relleno-texto }}    
     </div>  
 
-    <div class="responsivo col-7 bg-black mt-5 py-5 text-center pt-5">
+    <div class="responsivo col-7 bg-black mt-5 py-5 text-center pt-5">      
       <h1>Antecedentes de salud {{this.nombreMascota}}</h1>
       <br>
 
-      <form action="/antecedentes_de_salud" method="POST" enctype="multipart/form-data">        
+      <form action="/antecedentes_de_salud" method="POST" enctype="multipart/form-data">
+      <div>                
+          <img id="foto-perfil" src="{{this.foto_mascota}}">                
+      </div>        
         <div class="form-group">
-          <div class="form-group py-3">        
+          <div class="form-group py-3">
+            <label for="">Sintomas</label>        
             <input type="text" name="sintomas" placeholder="Sintomas" class="form-control w-50 m-auto">
           </div>
-          <div class="form-group py-3">        
+          <div class="form-group py-3"> 
+            <label for="">Edad</label>       
             <input type="text" name="edad" placeholder="Edad" class="form-control w-50 m-auto">
           </div>
-          <div class="form-group py-3">        
+          <div class="form-group py-3"> 
+            <label for="">Peso</label>       
             <input type="text" name="peso" placeholder="Peso" class="form-control w-50 m-auto">
           </div>
-          <div class="form-group py-3">        
+          <div class="form-group py-3"> 
+            <label for="">Tipo de alimentación</label>       
             <input type="text" name="tipo_de_alimentacion" placeholder="Tipo de alimentación" class="form-control w-50 m-auto">
           </div>
         </div>
-          <select class="form-select mb-3 w-50 m-auto" aria-label="Default select example" >
-            <option selected>Tiene sus vacunas al día?</option>
-            <option value="1">Si</option>
-            <option value="2">No</option>
+        <label for="">Tiene sus vacunas al dia?</label>
+          <select class="form-select mb-3 w-50 m-auto" name="es_vacunado" aria-label="Default select example">            
+            <option value="true">Si</option>
+            <option value="false">No</option>
+          </select>
+        <label for="">Está esterilizado?</label>
+          <select class="form-select mb-3 w-50 m-auto" name="es_esterilizado" aria-label="Default select example">                       
+            <option value="true">Si</option>
+            <option value="false">No</option>
           </select>
 
-          <select class="form-select mb-3 w-50 m-auto" aria-label="Default select example" >
-            <option selected>Está esterilizado?</option>
-            <option value="1">Si</option>
-            <option value="2">No</option>
-          </select>
-
-          <div class="form-group py-3 mb-3">        
+          <div class="form-group py-3 mb-3"> 
+            <label for="">Ha sido operado?</label>       
             <textarea class="form-control w-50 m-auto" name="operaciones_detalle" placeholder="Detalle de operaciones" rows="3"></textarea>
           </div> 
+
+          <div class="form-group col-12 col-sm-12">
+            <p class=" text-white mb-2">Agregar una foto de su estado actual</p><br>            
+            <input type="file" name="foto" onchange="previewFile()"><br>
+            <img src="/" height="200" alt="image preview">
+          </div>
 
           <button class="btn btn-danger mb-2 py-2 w-50 m-auto">Guardar</button><br>  
           <a href="./lista_especialistas">Elige un especialista</a></p>          

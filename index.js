@@ -20,7 +20,11 @@ const {
     muestra_especialistas, 
     cambiar_estado_especialistas,
     trae_tutor,
-    trae_especialista
+    trae_especialista,
+    eliminar_tutor,
+    actualizar_tutor,
+    nueva_mascota,
+    antecedentes_salud    
 
 } = require('./database');
 
@@ -32,7 +36,7 @@ app.listen(puerto, console.log('servidor en puerto:', puerto));
 
 //recibe carga de imagenes
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({extended: true}));
+//app.use(express.urlencoded({extended: true}));
 
 //permite usar PUT o DELETE en lugares donde el cliente no lo admite
 app.use(methodOverride('_method'))
@@ -134,7 +138,7 @@ app.get('/crear_cuenta_especialista', (req, res) => {
     res.render('crear_cuenta_especialista');
 })
 
-//ruta post para ingresar datos y crear nuevo tutor, debe redireccionar a inicio de sesion
+//ruta post para ingresar datos y crear nuevo especialista, debe redireccionar a inicio de sesion
 app.post('/nuevo_especialista', async (req, res) => {
     const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales, perfil } = req.body;
     const estado = false;    
@@ -184,7 +188,7 @@ app.get('/autorizacion_tutores', async (req, res) => {
 //ruta put que cambia estado de tutores
 app.put('/autorizacion_tutores', async (req, res)=>{
     const { estado, cedula_de_identidad } = req.body;
-    console.log(req.body)    
+    // console.log(req.body)    
     try {
         const tutor = await cambiar_estado_tutores(estado, cedula_de_identidad);
         res.status(200).send(JSON.stringify(tutor));
@@ -266,7 +270,7 @@ app.post('/inicio_sesion_tutor', async (req, res) => {
 //PERFIL TUTOR
 
 //ruta get con perfil de tutor, redirecciona a registro de mascota
-app.get('/perfil_tutor' , async (req, res) => {
+app.get('/perfil_tutor' , function (req, res) {
     const { token } = req.query;
     jwt.verify(token, secretKey, (err, decoded) => {
         const { data } = decoded;
@@ -285,6 +289,20 @@ app.get('/perfil_tutor' , async (req, res) => {
 });
 
 
+//eliminar datos de tutor
+app.delete('/eliminar/:cedula_de_identidad', async (req, res) => {          
+    const cedula_de_identidad = req.params.cedula_de_identidad;   
+    await eliminar_tutor(cedula_de_identidad);
+    res.send('Su datos han sido eliminados');   
+});
+
+//actualizar datos de tutor
+app.put('/actualizar/:cedula_de_identidad', async (req, res) => {      
+    const { nombre_tutor, telefono, correo_tutor, cedula_de_identidad  } = req.body;
+    // console.log(req.body)      
+    await actualizar_tutor(nombre_tutor, telefono, correo_tutor, cedula_de_identidad );    
+    res.redirect('/registro_mascota');   
+})
 
 //DATOS DE MASCOTA
 
@@ -292,6 +310,8 @@ app.get('/perfil_tutor' , async (req, res) => {
 app.get('/registro_mascota', (req, res) => {
     res.render('registro_mascota');
 })
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 //INICIO SESION ESPECIALISTA
