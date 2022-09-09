@@ -113,6 +113,18 @@ const nueva_mascota = async ( nombre_mascota, tipo_mascota, especie, foto_mascot
     return mascota;
 }
 
+//ANTECEDENTES DE SALUD MASCOTA
+
+const antecedentes_salud = async ( sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual) => {    
+    const consulta = {
+        text: 'INSERT INTO antecedentes_de_salud ( sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+        values: [ sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual]
+    }
+    const resultado = await pool.query(consulta);   
+    const antecedente = resultado.rows[0];
+    return antecedente;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // INICIO SESION ESPECIALISTA
@@ -140,6 +152,7 @@ module.exports = {
     trae_especialista,
     eliminar_tutor,
     actualizar_tutor,
-    nueva_mascota
+    nueva_mascota,
+    antecedentes_salud
 };
 

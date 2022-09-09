@@ -275,7 +275,7 @@ app.get('/perfil_tutor' , function (req, res) {
     jwt.verify(token, secretKey, (err, decoded) => {
         const { data } = decoded;
         const { nombre_tutor, cedula_de_identidad, telefono, correo_tutor, foto_tutor } = data;
-        console.log(data)       
+        // console.log(data)       
         err
             ? res.status(401).send(
                 res.send({
@@ -311,6 +311,73 @@ app.get('/registro_mascota', (req, res) => {
     res.render('registro_mascota');
 })
 
+//ruta post que crea nueva mascota, deberia redireccionar a completar antecedentes de salud
+app.post('/nueva_mascota' , async (req, res) => {
+    const { nombre_mascota, tipo_mascota, especie } = req.body;
+    // console.log(req.body)
+
+    if (Object.keys(req.files).length == 0) {
+        return res.status(400).send('no se encontro ningun archivo en la consulta');
+    }  
+    const {files}=req
+    const { foto }= files;
+    const{name}= foto;    
+    const foto_mascota = (`http://localhost:`+ puerto +`/uploads/${name}`);
+    // console.log(foto_mascota)
+    try {
+        const mascota = await nueva_mascota( nombre_mascota, tipo_mascota, especie, foto_mascota );                
+        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+            if (err) return res.status(500).send({
+                error: `algo salio mal... ${err}`,
+                code: 500
+            })
+            // const mascota_id = await consulta_id()
+            res.redirect('/antecedentes');            
+        })       
+           
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })       
+    }     
+    
+});
+
+//ruta get con formulario para compleatr antecedentes de  salud
+app.get('/antecedentes', async (req, res) => {
+    res.render('antecedentes')
+})
+
+//ruta post para crear ficha con antecedentes de salud
+app.post('/antecedentes_de_salud' , async (req, res) => {
+    const { sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle } = req.body;
+    console.log(req.body)
+    if (Object.keys(req.files).length == 0) {
+        return res.status(400).send('no se encontro ningun archivo en la consulta');
+    }  
+    const {files}=req
+    const { foto }= files;
+    const{name}= foto;    
+    const img_estado_actual = (`http://localhost:`+ puerto +`/uploads/${name}`);
+    console.log(img_estado_actual)
+    try {
+        const antecedente = await antecedentes_salud( sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual);
+        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+            if (err) return res.status(500).send({
+                error: `algo salio mal... ${err}`,
+                code: 500
+            })
+            res.redirect('/lista_especialistas');            
+        })       
+           
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })       
+    }     
+})
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
