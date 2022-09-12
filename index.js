@@ -24,7 +24,9 @@ const {
     eliminar_tutor,
     actualizar_tutor,
     nueva_mascota,
-    antecedentes_salud    
+    antecedentes_salud,
+    eliminar_especialista,
+    actualizar_especialista    
 
 } = require('./database');
 
@@ -360,7 +362,7 @@ app.post('/antecedentes_de_salud' , async (req, res) => {
     const { foto }= files;
     const{name}= foto;    
     const img_estado_actual = (`http://localhost:`+ puerto +`/uploads/${name}`);
-    console.log(img_estado_actual)
+    // console.log(img_estado_actual)
     try {
         const antecedente = await antecedentes_salud( sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual);
         foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
@@ -399,8 +401,8 @@ app.post('/inicio_sesion_especialista', async (req, res) => {
                     exp: Math.floor(Date.now() / 1000) + 180,
                     data: especialista,
                 },secretKey
-            );
-            res.redirect(`/perfil_especialista?token=${token}`);            
+            );             
+            res.redirect(`/perfil_especialista?token=${token}`);           
             
         } else {
             res.status(401).send({
@@ -418,11 +420,56 @@ app.post('/inicio_sesion_especialista', async (req, res) => {
 
 //PERFIL ESPECIALISTA
 
-//ruta get con perfil de especialista
-app.get('/perfil_especialista' , async (req, res) => {
-    res.render('perfil_tutor');
+//ruta get con perfil de especialista, redirecciona ................................
+app.get('/perfil_especialista' , function (req, res) {
+    const { token } = req.query;
+    jwt.verify(token, secretKey, (err, decoded) => {
+        const { data } = decoded;
+        const { nombre_especialista, cedula_de_identidad, correo_especialista, especialidad, credenciales, foto_especialista } = data;
+        // console.log(data)       
+        err
+            ? res.status(401).send(
+                res.send({
+                    error: '401 Unauthorized',
+                    message: 'Usted no esta autorizado para estar aqui',
+                    token_error: err.message,
+                })
+            )
+            : res.render('perfil_especialista', { nombre_especialista, cedula_de_identidad, correo_especialista, especialidad, credenciales, foto_especialista });
+    });
 });
 
 
+//eliminar datos de especialista
+app.delete('/eliminar_especialista/:cedula_de_identidad', async (req, res) => {          
+    const cedula_de_identidad = req.params.cedula_de_identidad;   
+    await eliminar_especialista(cedula_de_identidad);
+    res.send('Su datos han sido eliminados');   
+});
+
+//actualizar datos de especialista
+app.put('/actualizar_especialista/:cedula_de_identidad', async (req, res) => {      
+    const { cedula_de_identidad, correo_especialista, credenciales} = req.body;
+    // console.log(req.body)      
+    await actualizar_especialista(correo_especialista, credenciales, cedula_de_identidad);    
+    res.redirect('/lista_especialistas');   
+})
+
+///////////////////////////////////////////////////////////////////////////
+
+//EN OBRA
+
+//ruta get, muestra los datos del especialista
+// app.get('/datos_especialistas', (req, res) => {
+//     res.render('datos_especialistas');
+// })
+//agregar ruta put para modificar datos
+//agregar ruta delete para eliminar cuenta
+//agregar ruta get con notificacion de correos
+
+//ruta get, con lista de especialistas para ser consultados
+app.get('/lista_especialistas', (req, res) => {
+    res.render('lista_especialistas');
+})
 
 
