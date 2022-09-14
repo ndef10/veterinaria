@@ -3,18 +3,19 @@
   <div class="py-5 text-center">
   <h1>Contacto</h1>
   <br>
-
+  
   <form action="/contacto" method="POST">
-    <div class="form-group">     
-      <div class="form-group pt-3">        
-        <textarea class="form-control w-50 m-auto" name="redaccion" placeholder="Correo redactado" rows="20"></textarea>
-      </div>
-      <div class="form-group col-12 col-sm-12">
-      <label>Adjunta una fotografia de su estado</label><br>            
-      <input type="file" name="foto_estado" onchange="previewFile()"><br>
-      <img src="/" height="200" alt="image preview">
-    </div>    
-    </div>  
-    <button class="btn btn-danger mb-2 py-2 w-50 m-auto">Enviar correo</button>     
+  <div class="align-left">
+    <p>Junto con saludar, solicito orientacion con la siguiente situacion:
+       
+    <p>Tengo un {{this.especie}} llamado {{this.nombre_mascota}} que se encuentra con estos sintomas: {{sintomas}}</p>
+    <p>Como antecedente, cabe destacar que tiene {{edad}}, pesa {{this.peso}}, {{this.es_vacunado}} se encuentra vacunado, y {{this.es_esterilizado}} esta esterilizado. </p>
+    <p>Intervenciones quirurgicas: {{this.detalle_operaciones}}</p>
+  </div>
+    
+  <div>
+    <button class="btn btn-danger mb-2 py-2 w-50 m-auto">Enviar correo</button>
+  </div>  
+         
   </form>
 </div>

@@ -161,6 +161,23 @@ async function actualizar_especialista(correo_especialista, credenciales, cedula
 }
 
 
+//TRAE LISTA DE ESPECIALISTAS
+
+async function muestra_lista_especialistas() {
+    const resultado = await pool.query(`SELECT * FROM especialista`);
+    // console.log(resultado)
+    return resultado.rows;
+}
+
+async function trae_datos_especialista(cedula_de_identidad) {
+    const consulta = {
+        text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1',
+        values: [cedula_de_identidad]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
 
 module.exports = { 
     nuevo_tutor,
@@ -176,6 +193,8 @@ module.exports = {
     nueva_mascota,
     antecedentes_salud,
     eliminar_especialista,
-    actualizar_especialista
+    actualizar_especialista,
+    muestra_lista_especialistas,   
+    trae_datos_especialista
 };
 

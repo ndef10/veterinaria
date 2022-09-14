@@ -9,7 +9,7 @@
         <th scope="col">#</th>
         <th scope="col">Foto</th>
         <th scope="col">Nombre</th>        
-        <th scope="col">Estado</th>
+        <th scope="col">Selección</th>
       </tr>
     </thead>
 
@@ -20,25 +20,42 @@
         <td>{{@index}}</td>
         <td>
           <div>                
-            <img id="foto-perfil"src="{{this.foto}}" height="55" Width="75">                
+            <img class="rounded-circle" src="{{this.foto_especialista}}" height="55" Width="75">                
           </div>
         </td>
-        <td>{{this.nombre}}<br>{{this.especialidad}}<br>{{this.credenciales}}<br></td>        
-        <td type="hidden">{{this.correo}}</td>
-        {{#if this.estado}}
-        <td class="text-success font-weight-bold" {{this.estado}}>Disponible</td>                          
-        {{else}}
-        <td class="text-warning font-weight-bold" {{this.estado}}>No disponible</td> 
-        {{/if}}       
+        <td>{{this.nombre_especialista}}<br>{{this.especialidad}}<br>{{this.credenciales}}<br></td> 
+               
+        <td><input type="radio" name="seleccion" {{#if false }} checked {{/if}} onclick="autorizar({{this.cedula_de_identidad}}, this)"></td>   
         
-      </tr>      
-      {{/each}}
+      </tr>  
+      {{/each}} 
       
     </tbody>
   </table>
-  <div class="text-center">
-      <button class="btn btn-danger mb-2 mt-4 py-2 w-50 m-auto">Confirma tu selección</button> 
+  <div class="text-center mt-3">    
+    <a  href="./contacto">Revisar texto que será enviado</a>
   </div>
     
 </div>
+
+
+<script>
+
+  const autorizar = async (cedula_de_identidad, e) => {    
+    const seleccion = e.checked
+    console.log(cedula_de_identidad, seleccion);
+    try {
+      await axios.put('/seleccion_especialista', {
+        cedula_de_identidad,
+        seleccion
+      })
+      alert(seleccion ? 'Especialista seleccionado, por favor confirme seleccion' : 'Ha ocurrido un error, intente más tarde');      
+    }
+    catch ({ respuesta }) {
+      const { data } = respuesta
+      const { error } = data
+      alert(error)
+    }    
+  }
   
+</script>   

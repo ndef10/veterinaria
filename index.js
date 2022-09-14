@@ -26,7 +26,10 @@ const {
     nueva_mascota,
     antecedentes_salud,
     eliminar_especialista,
-    actualizar_especialista    
+    actualizar_especialista,
+    muestra_lista_especialistas,
+    // selecciona_especialista,
+    trae_datos_especialista   
 
 } = require('./database');
 
@@ -208,7 +211,8 @@ app.put('/autorizacion_tutores', async (req, res)=>{
 //ruta que trae lista de especialistas para su autorizacion
 app.get('/autorizacion_especialistas', async (req, res) => {    
     try {
-        const especialistas = await muestra_especialistas();   
+        const especialistas = await muestra_especialistas();
+        // console.log(especialistas)   
         res.render('autorizacion_especialistas', { especialistas });     
     } catch (e) {
         res.status(500).send({
@@ -455,21 +459,52 @@ app.put('/actualizar_especialista/:cedula_de_identidad', async (req, res) => {
     res.redirect('/lista_especialistas');   
 })
 
+//LISTA DE ESPECIALISTAS
+
+
+app.get('/lista_especialistas', async(req, res) => {
+    try {
+        const especialistas = await muestra_lista_especialistas();
+        // console.log(especialistas)   
+        res.render('lista_especialistas', { especialistas });     
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        });        
+    }
+});
+
+//ruta put que selecciona un especialista de la lista
+app.put('/seleccion_especialista', async (req, res)=>{
+    const { cedula_de_identidad } = req.body;
+    console.log(req.body)    
+    try {
+        const especialista = await trae_datos_especialista(cedula_de_identidad);
+        console.log(especialista)
+        
+        res.status(200).send(JSON.stringify(especialista));
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })
+    }
+    
+})
+
+//ruta get, con formulario de contacto
+app.get('/contacto', async(req, res) => {
+    res.render('contacto');
+})
+
+
 ///////////////////////////////////////////////////////////////////////////
 
 //EN OBRA
 
-//ruta get, muestra los datos del especialista
-// app.get('/datos_especialistas', (req, res) => {
-//     res.render('datos_especialistas');
-// })
-//agregar ruta put para modificar datos
-//agregar ruta delete para eliminar cuenta
+//agregar ruta put para modificar datos mascota
+//agregar ruta delete para eliminar mascota
 //agregar ruta get con notificacion de correos
-
-//ruta get, con lista de especialistas para ser consultados
-app.get('/lista_especialistas', (req, res) => {
-    res.render('lista_especialistas');
-})
 
 

@@ -22,9 +22,9 @@
         <td>{{this.nombre_especialista}}</td>
         <td>{{this.cedula_de_identidad}}</td>
         
-        <td><input type="checkbox" {{#if this.estado}} checked {{/if}} onclick="autorizar({{this.cedula_de_identidad}}, this)"></td>
+        
       </tr>
-      {{/each}}
+      {{/each}}<td><input type="checkbox" {{#if this.estado}} checked {{/if}} onclick="autorizar({{this.cedula_de_identidad}}, this)"></td>
 
     </tbody>
   </table>
