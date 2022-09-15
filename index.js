@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.SECRETKEY;
 const methodOverride = require('method-override');
+// const bcrypt = require('bcryptjs');
 // const session = require('express-session');
 
 const app = express();
@@ -27,11 +28,15 @@ const {
     antecedentes_salud,
     eliminar_especialista,
     actualizar_especialista,
-    muestra_lista_especialistas,
-    // selecciona_especialista,
-    trae_datos_especialista   
+    muestra_lista_especialistas,   
+    trae_datos_especialista,
+    trae_mascota,
+    trae_contrasena_encriptada
+     
 
 } = require('./database');
+
+const  { encripta, compara }  = require('./encriptador_tutor');
 
 //servidor
 const puerto = process.env.PORT || 4000
@@ -116,10 +121,13 @@ app.post('/nuevo_tutor', async (req, res) => {
     const {files}=req
     const { foto }= files;
     const{name}= foto;    
-    const foto_tutor = (`http://localhost:`+ puerto +`/uploads/${name}`);
-    //falta cifrar contrasena antes de guardar en la base de datos y validar    
+    const foto_tutor = (`http://localhost:`+ puerto +`/uploads/${name}`);    
+    const contrasena_encriptada = await encripta(contrasena_tutor);  
+    console.log(contrasena_encriptada);   
+    
     try {
-        const tutor = await nuevo_tutor( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado );
+        
+        const tutor = await nuevo_tutor( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_encriptada, perfil, foto_tutor, estado );
         foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
             if (err) return res.status(500).send({
                 error: `algo salio mal... ${err}`,
@@ -148,7 +156,7 @@ app.post('/nuevo_especialista', async (req, res) => {
     const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales, perfil } = req.body;
     const estado = false;    
     // console.log(req.body);
-    console.log(estado);
+    // console.log(estado);
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('no se encontro ningun archivo en la consulta');
     }  
@@ -225,7 +233,7 @@ app.get('/autorizacion_especialistas', async (req, res) => {
 //ruta put que cambia estado de especialistas
 app.put('/autorizacion_especialistas', async (req, res)=>{
     const { estado, cedula_de_identidad } = req.body;
-    console.log(req.body)    
+    // console.log(req.body)    
     try {
         const especialista = await cambiar_estado_especialistas(estado, cedula_de_identidad);
         res.status(200).send(JSON.stringify(especialista));
@@ -248,8 +256,19 @@ app.get('/inicio_sesion_tutor', (req, res) => {
 //ruta post inicio de sesion para tutor
 app.post('/inicio_sesion_tutor', async (req, res) => {
     const { cedula_de_identidad, contrasena_tutor } = req.body; 
-    //console.log(req.body)   
-    const tutor = await trae_tutor(cedula_de_identidad, contrasena_tutor);   
+    const tutor_id = await trae_contrasena_encriptada(cedula_de_identidad);     
+    contrasena_encriptada = tutor_id.contrasena_tutor; 
+    console.log(contrasena_encriptada)
+    const compara_contrasena = await compara(contrasena_tutor, contrasena_encriptada); 
+    console.log(compara_contrasena)
+    if (compara_contrasena === false) {
+        res.status(401).send({
+            error: 'Credenciales incorrectas',
+            code: 401,
+        });
+    }
+    const tutor = await trae_tutor(cedula_de_identidad, contrasena_encriptada); 
+     
     if(tutor) {
         if (tutor.estado) {
             const token = jwt.sign({
@@ -280,7 +299,7 @@ app.get('/perfil_tutor' , function (req, res) {
     const { token } = req.query;
     jwt.verify(token, secretKey, (err, decoded) => {
         const { data } = decoded;
-        const { nombre_tutor, cedula_de_identidad, telefono, correo_tutor, foto_tutor } = data;
+        const { id, nombre_tutor, cedula_de_identidad, telefono, correo_tutor, foto_tutor } = data;
         // console.log(data)       
         err
             ? res.status(401).send(
@@ -290,7 +309,7 @@ app.get('/perfil_tutor' , function (req, res) {
                     token_error: err.message,
                 })
             )
-            : res.render('perfil_tutor', { nombre_tutor, cedula_de_identidad, telefono, correo_tutor, foto_tutor });
+            : res.render('perfil_tutor', { id, nombre_tutor, cedula_de_identidad, telefono, correo_tutor, foto_tutor });
     });
 });
 
@@ -358,7 +377,7 @@ app.get('/antecedentes', async (req, res) => {
 //ruta post para crear ficha con antecedentes de salud
 app.post('/antecedentes_de_salud' , async (req, res) => {
     const { sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('no se encontro ningun archivo en la consulta');
     }  
@@ -478,10 +497,10 @@ app.get('/lista_especialistas', async(req, res) => {
 //ruta put que selecciona un especialista de la lista
 app.put('/seleccion_especialista', async (req, res)=>{
     const { cedula_de_identidad } = req.body;
-    console.log(req.body)    
+    // console.log(req.body)    
     try {
         const especialista = await trae_datos_especialista(cedula_de_identidad);
-        console.log(especialista)
+        // console.log(especialista)
         
         res.status(200).send(JSON.stringify(especialista));
     } catch (e) {
@@ -501,10 +520,20 @@ app.get('/contacto', async(req, res) => {
 
 ///////////////////////////////////////////////////////////////////////////
 
+//DATOS MASCOTA
+
+// ruta get con datos de mascota
+// app.get('/datos_mascota', async(req, res) => {
+//     res.render('datos_mascota');
+// })
+
+
+
 //EN OBRA
 
 //agregar ruta put para modificar datos mascota
-//agregar ruta delete para eliminar mascota
+//agregar ruta put para modificar antecedentes de salud
+//agregar ruta delete para eliminar mascota y sus antecedentes
 //agregar ruta get con notificacion de correos
 
 

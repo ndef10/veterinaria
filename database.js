@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-//const bcrypt = require('bcryptjs');
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -12,10 +11,11 @@ const pool = new Pool({
 
 //CREAR TUTORES
 
-const nuevo_tutor = async ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) => {    
+const nuevo_tutor = async ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_encriptada, perfil, foto_tutor, estado ) => { 
+    // console.log(hash)   
     const consulta = {
         text: 'INSERT INTO tutor ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-        values: [ nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado]
+        values: [ nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_encriptada, perfil, foto_tutor, estado]
     }
     const resultado = await pool.query(consulta);   
     const tutor = resultado.rows[0];
@@ -70,10 +70,19 @@ async function cambiar_estado_especialistas(estado, cedula_de_identidad) {
 
 // INICIO SESION TUTOR
 
-async function trae_tutor(cedula_de_identidad, contrasena_tutor) {
+async function trae_contrasena_encriptada(cedula_de_identidad) {
+    const consulta = {
+        text: 'SELECT * FROM tutor WHERE cedula_de_identidad = $1',
+        values: [cedula_de_identidad]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
+async function trae_tutor(cedula_de_identidad, compara_contrasena) {
     const consulta = {
         text: 'SELECT * FROM tutor WHERE cedula_de_identidad = $1 AND contrasena_tutor = $2',
-        values: [cedula_de_identidad, contrasena_tutor]
+        values: [cedula_de_identidad, compara_contrasena]
     };
     const result = await pool.query(consulta);
     return result.rows[0];
@@ -156,7 +165,7 @@ async function actualizar_especialista(correo_especialista, credenciales, cedula
     }
     const resultado = await pool.query(consulta);   
     const especialista = resultado.rows[0];
-    console.log(especialista)
+    // console.log(especialista)
     return especialista;        
 }
 
@@ -178,6 +187,17 @@ async function trae_datos_especialista(cedula_de_identidad) {
     return result.rows[0];
 }
 
+async function trae_mascota(id) {
+    const consulta = {
+        text: 'SELECT * FROM mascota WHERE tutor_id = $1',
+        values: [id]
+    };
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];
+    console.log(mascota)
+    return mascota;
+}
+
 
 module.exports = { 
     nuevo_tutor,
@@ -195,6 +215,8 @@ module.exports = {
     eliminar_especialista,
     actualizar_especialista,
     muestra_lista_especialistas,   
-    trae_datos_especialista
+    trae_datos_especialista,
+    trae_mascota,
+    trae_contrasena_encriptada
 };
 
