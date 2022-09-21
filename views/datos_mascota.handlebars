@@ -3,57 +3,69 @@
 
   <div class="row">
     <div class="col-6 mt-5"> 
-      <img src="{{this.foto_mascota}}" height="100%" Width="100%"> 
+      <img src="{{this.mascota.foto_mascota}}" height="100%" Width="100%"> 
     </div>
     <div class="responsivo col-6 bg-black mt-5 py-5 text-center">
-      <h1>Datos de tu mascota{{this.nombre_mascota}}</h1>
+      <h1>Datos de tu mascota</h1>
+      <h1>{{this.mascota.nombre_mascota}}</h1>
       <br>
 
-      <form action="/datos_mascota/{{this.id}}?_method=PUT" method="POST">
+      <form action="/actualizar_datos_mascota/{{this.mascota.id}}?_method=PUT" method="POST">
         <input type="hidden" name="_method" value="PUT">
         <div class="form-group">
-          <div>                
-            <img id="foto-perfil" src="{{this.foto_mascota}}">                
+          <div class="form-group py-3">
+            <label>Nombre de mascota</label> 
+            <input type="text" name="nombre_mascota" class="form-control w-50 m-auto" value={{this.mascota.nombre_mascota}}>        
           </div>
           <div class="form-group py-3">
             <label>Especie</label> 
-            <input type="text" name="especie" class="form-control w-50 m-auto" value={{this.especie}}>        
+            <input type="text" name="especie" class="form-control w-50 m-auto" value={{this.mascota.especie}}>        
+          </div>
+          <label>Tipo de mascota</label> 
+          <select class="form-select mb-3 w-50 m-auto" name="tipo_mascota" aria-label="Default select example" value={{this.mascota.tipo_mascota}}>
+            <option value="domestico">Domestico</option>
+            <option value="granja">Granja</option>
+            <option value="exotico">Exótico</option>
+          </select>
+          <div class="form-group py-3">
+            <label>Sintomas</label> 
+            <input type="text" name="sintomas" class="form-control w-50 m-auto" value={{this.antecedentes.sintomas}}>        
           </div>
           <div class="form-group py-3"> 
             <label>Edad al momento de la consulta</label>      
-            <input type="text" name="edad" class="form-control w-50 m-auto" value={{this.edad}}>
+            <input type="text" name="edad" class="form-control w-50 m-auto" value={{this.antecedentes.edad}}>
           </div>
           <div class="form-group py-3"> 
             <label>Peso al momento de la consulta</label>       
-            <input type="text" name="peso" class="form-control w-50 m-auto" value={{this.peso}}>
+            <input type="text" name="peso" class="form-control w-50 m-auto" value={{this.antecedentes.peso}}>
           </div>
           <div class="form-group py-3">  
             <label>Tipo de alimentacion</label>      
-            <input type="text" name="tipo_de_alimentacion" class="form-control w-50 m-auto" value={{this.tipo_de_alimentacion}}>
+            <input type="text" name="tipo_de_alimentacion" class="form-control w-50 m-auto" value={{this.antecedentes.tipo_de_alimentacion}}>
           </div>
           <div class="form-group py-3">  
             <label>Esterilizado</label>      
-            <input type="text" name="esterilizado" class="form-control w-50 m-auto" value={{this.es_esterilizado}}>
+            <input type="text" readonly=»readonly» name="esterilizado" class="form-control w-50 m-auto" value={{this.antecedentes.es_esterilizado}}>
           </div>
           <div class="form-group py-3">  
             <label>Vacunas al dia</label>      
-            <input type="text" name="vacunas" class="form-control w-50 m-auto" value={{this.es_vacunado}}>
+            <input type="text" readonly=»readonly» name="vacunas" class="form-control w-50 m-auto" value={{this.antecedentes.es_vacunado}}>
           </div>
           <div class="form-group py-3">  
             <label>Detalle de operaciones</label>      
-            <input type="text" name="operaciones_detalle" class="form-control w-50 m-auto" value={{this.operaciones_detalle}}>
+            <input type="text" readonly=»readonly» name="operaciones_detalle" class="form-control w-50 m-auto" value={{this.antecedentes.operaciones_detalle}}>
           </div>          
         </div> 
         <button class="btn btn-success my-3 py-2 w-50 m-auto">Actualizar</button>     
       </form> 
       <div>
-        <form action="/eliminar_datos_mascota/{{this.ci}}?_method=DELETE" method="POST">
+        <form action="/eliminar_datos_mascota/{{this.mascota.id}}?_method=DELETE" method="POST">
           <input type="hidden" name="_method" value="DELETE">
           <button type="submit" class="btn btn-danger mb-2 py-2 w-50 m-auto">Eliminar cuenta</button>    
         </form>
         </div>
           <br>       
-          <a href="./lista-especialistas">Ver lista de especialistas</a> 
+          <a href="./lista_especialistas">Ver lista de especialistas</a> 
         </div>
       </div>
     </div> 

@@ -74,4 +74,3 @@ veterinaria=# select * from antecedentes_de_salud;
 
 
 select * from mascota inner join especialista on mascota.tipo_mascota = especialista.especialidad;
-

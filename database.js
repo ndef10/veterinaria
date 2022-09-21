@@ -11,8 +11,7 @@ const pool = new Pool({
 
 //CREAR TUTORES
 
-const nuevo_tutor = async ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_encriptada, perfil, foto_tutor, estado ) => { 
-    // console.log(hash)   
+const nuevo_tutor = async ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_encriptada, perfil, foto_tutor, estado ) => {    
     const consulta = {
         text: 'INSERT INTO tutor ( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, perfil, foto_tutor, estado ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
         values: [ nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_encriptada, perfil, foto_tutor, estado]
@@ -88,6 +87,47 @@ async function trae_tutor(cedula_de_identidad, compara_contrasena) {
     return result.rows[0];
 }
 
+async function tutor_ci(cedula_de_identidad) {
+    const consulta = {
+        text: 'SELECT * FROM tutor WHERE cedula_de_identidad = $1',
+        values: [cedula_de_identidad]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
+//MODIFICACION Y ELIMINACION DE MASCOTA, ANTECEDENTES DE SALUD Y TUTOR
+
+async function trae_id_mascota(tutor_id) {
+    const consulta = {
+        text: 'SELECT * FROM mascota WHERE tutor_id = $1',
+        values: [tutor_id]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
+async function eliminar_ant_y_tutor(id_mascota) {
+    const consulta = {
+        text: 'DELETE FROM antecedentes_de_salud WHERE mascota_id = $1 RETURNING *',
+        values: [id_mascota]
+    }
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];
+    return mascota;
+    
+}
+
+async function eliminar_mascota_y_tutor(tutor_id) {
+    const consulta = {
+        text: 'DELETE FROM mascota WHERE tutor_id = $1 RETURNING *',
+        values: [tutor_id]
+    }
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];
+    return mascota;
+    
+}
 
 async function eliminar_tutor(cedula_de_identidad) {
     const consulta = {
@@ -100,6 +140,8 @@ async function eliminar_tutor(cedula_de_identidad) {
     
 }
 
+//ACTUALIZAR TUTOR
+
 async function actualizar_tutor(nombre_tutor, telefono, correo_tutor, cedula_de_identidad) {
     const consulta = {
         text: 'UPDATE tutor SET nombre_tutor = $1, telefono = $2, correo_tutor = $3 WHERE cedula_de_identidad = $4 RETURNING *',        
@@ -110,12 +152,14 @@ async function actualizar_tutor(nombre_tutor, telefono, correo_tutor, cedula_de_
     return tutor;        
 }
 
+//
+
 // REGISTRAR MASCOTA
 
-const nueva_mascota = async ( nombre_mascota, tipo_mascota, especie, foto_mascota ) => {    
+const nueva_mascota = async ( tutor_id, nombre_mascota, tipo_mascota, especie, foto_mascota ) => {    
     const consulta = {
-        text: 'INSERT INTO mascota ( nombre_mascota, tipo_mascota, especie, foto_mascota ) VALUES ($1, $2, $3, $4) RETURNING *',
-        values: [ nombre_mascota, tipo_mascota, especie, foto_mascota]
+        text: 'INSERT INTO mascota ( tutor_id, nombre_mascota, tipo_mascota, especie, foto_mascota ) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        values: [ tutor_id, nombre_mascota, tipo_mascota, especie, foto_mascota]
     }
     const resultado = await pool.query(consulta);   
     const mascota = resultado.rows[0];
@@ -124,15 +168,80 @@ const nueva_mascota = async ( nombre_mascota, tipo_mascota, especie, foto_mascot
 
 //ANTECEDENTES DE SALUD MASCOTA
 
-const antecedentes_salud = async ( sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual) => {    
+const antecedentes_salud = async ( mascota_id, sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual) => {    
     const consulta = {
-        text: 'INSERT INTO antecedentes_de_salud ( sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-        values: [ sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual]
+        text: 'INSERT INTO antecedentes_de_salud ( mascota_id, sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+        values: [ mascota_id, sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual]
     }
     const resultado = await pool.query(consulta);   
     const antecedente = resultado.rows[0];
     return antecedente;
 }
+
+//TRAE, ELIMINA Y ACTUALIZA DATOS DE TABLA MASCOTA Y ANTECEDENTES DE SALUD
+
+async function trae_mascota(mascota_id) {
+    const consulta = {
+        text: 'SELECT * FROM mascota WHERE tutor_id = $1',
+        values: [mascota_id]
+    };
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];   
+    return mascota;    
+}
+
+async function trae_antecedentes_mascota(mascota_id) {
+    const consulta = {
+        text: 'SELECT * FROM antecedentes_de_salud WHERE mascota_id = $1',
+        values: [mascota_id]
+    };
+    const resultado = await pool.query(consulta);   
+    const antecedentes= resultado.rows[0];    
+    return antecedentes;
+}
+
+async function eliminar_antecedentes(mascota_id) {
+    const consulta = {
+        text: 'DELETE FROM antecedentes_de_salud WHERE antecedentes_de_salud.mascota_id = $1 RETURNING *',
+        values: [mascota_id]
+    }
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];
+    return mascota;
+    
+}
+
+async function eliminar_mascota(mascota_id) {
+    const consulta = {
+        text: 'DELETE FROM mascota WHERE mascota.id = $1 RETURNING *',
+        values: [mascota_id]
+    }
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];
+    return mascota;
+    
+}
+
+async function actualizar_antecedentes(sintomas, edad_num, peso_num, tipo_de_alimentacion,mascota_id) {
+    const consulta = {
+        text: 'UPDATE antecedentes_de_salud SET sintomas = $1, edad = $2, peso = $3, tipo_de_alimentacion = $4 WHERE mascota_id = $5 RETURNING *',        
+        values: [sintomas, edad_num, peso_num, tipo_de_alimentacion, mascota_id]
+    }
+    const resultado = await pool.query(consulta);   
+    const antecedente = resultado.rows[0];
+    return antecedente;        
+}
+
+async function actualizar_mascota(nombre_mascota, tipo_mascota, especie, mascota_id) {
+    const consulta = {
+        text: 'UPDATE mascota SET nombre_mascota = $1, tipo_mascota = $2, especie = $3 WHERE id = $4 RETURNING *',        
+        values: [nombre_mascota, tipo_mascota, especie, mascota_id]
+    }
+    const resultado = await pool.query(consulta);   
+    const mascota = resultado.rows[0];
+    return mascota;        
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -187,17 +296,7 @@ async function trae_datos_especialista(cedula_de_identidad) {
     return result.rows[0];
 }
 
-async function trae_mascota(id) {
-    const consulta = {
-        text: 'SELECT * FROM mascota WHERE tutor_id = $1',
-        values: [id]
-    };
-    const resultado = await pool.query(consulta);   
-    const mascota = resultado.rows[0];
-    console.log(mascota)
-    return mascota;
-}
-
+//////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports = { 
     nuevo_tutor,
@@ -217,6 +316,16 @@ module.exports = {
     muestra_lista_especialistas,   
     trae_datos_especialista,
     trae_mascota,
-    trae_contrasena_encriptada
+    trae_contrasena_encriptada, 
+    tutor_ci,
+    trae_antecedentes_mascota,
+    eliminar_antecedentes,
+    eliminar_mascota,
+    actualizar_antecedentes,
+    actualizar_mascota,
+    trae_id_mascota,
+    eliminar_ant_y_tutor,
+    eliminar_mascota_y_tutor
 };
 
+ 
