@@ -247,14 +247,43 @@ async function actualizar_mascota(nombre_mascota, tipo_mascota, especie, mascota
 
 // INICIO SESION ESPECIALISTA
 
-async function trae_especialista(cedula_de_identidad, contrasena_especialista) {
+async function trae_contrasena_encriptada_especialista(cedula_de_identidad) {
     const consulta = {
-        text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1 AND contrasena_especialista = $2',
-        values: [cedula_de_identidad, contrasena_especialista]
+        text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1',
+        values: [cedula_de_identidad]
     };
     const result = await pool.query(consulta);
     return result.rows[0];
 }
+
+async function trae_especialista(cedula_de_identidad, compara_contrasena) {
+    const consulta = {
+        text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1 AND contrasena_especialista = $2',
+        values: [cedula_de_identidad, compara_contrasena]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
+async function especialista_ci(cedula_de_identidad) {
+    const consulta = {
+        text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1',
+        values: [cedula_de_identidad]
+    };
+    const result = await pool.query(consulta);
+    return result.rows[0];
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//de administarcion
+// async function trae_especialista(cedula_de_identidad, contrasena_especialista) {
+//     const consulta = {
+//         text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1 AND contrasena_especialista = $2',
+//         values: [cedula_de_identidad, contrasena_especialista]
+//     };
+//     const result = await pool.query(consulta);
+//     return result.rows[0];
+// }
 
 async function eliminar_especialista(cedula_de_identidad) {
     const consulta = {
@@ -267,24 +296,27 @@ async function eliminar_especialista(cedula_de_identidad) {
     
 }
 
-async function actualizar_especialista(correo_especialista, credenciales, cedula_de_identidad) {    
+async function actualizar_especialista(nombre_especialista, correo_especialista, especialidad, credenciales, cedula_de_identidad) {    
     const consulta = {
-        text: 'UPDATE especialista SET correo_especialista = $1, credenciales = $2 WHERE cedula_de_identidad = $3 RETURNING *',        
-        values: [correo_especialista, credenciales, cedula_de_identidad]
+        text: 'UPDATE especialista SET nombre_especialista = $1, correo_especialista = $2, especialidad = $3, credenciales = $4 WHERE cedula_de_identidad = $5 RETURNING *',        
+        values: [nombre_especialista, correo_especialista, especialidad, credenciales, cedula_de_identidad]
     }
     const resultado = await pool.query(consulta);   
-    const especialista = resultado.rows[0];
-    // console.log(especialista)
+    const especialista = resultado.rows[0];    
     return especialista;        
 }
 
 
 //TRAE LISTA DE ESPECIALISTAS
 
-async function muestra_lista_especialistas() {
-    const resultado = await pool.query(`SELECT * FROM especialista`);
-    // console.log(resultado)
+async function muestra_lista_especialistas(tipo_mascota) {
+    const consulta = {
+        text: 'SELECT * FROM especialista WHERE especialidad = $1',
+        values: [tipo_mascota]
+    };
+    const resultado = await pool.query(consulta);   
     return resultado.rows;
+
 }
 
 async function trae_datos_especialista(cedula_de_identidad) {
@@ -292,8 +324,9 @@ async function trae_datos_especialista(cedula_de_identidad) {
         text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1',
         values: [cedula_de_identidad]
     };
-    const result = await pool.query(consulta);
-    return result.rows[0];
+    const resultado = await pool.query(consulta);   
+    const especialista = resultado.rows[0];    
+    return especialista;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -305,8 +338,7 @@ module.exports = {
     cambiar_estado_tutores, 
     muestra_especialistas, 
     cambiar_estado_especialistas,
-    trae_tutor,
-    trae_especialista,
+    trae_tutor,    
     eliminar_tutor,
     actualizar_tutor,
     nueva_mascota,
@@ -325,7 +357,11 @@ module.exports = {
     actualizar_mascota,
     trae_id_mascota,
     eliminar_ant_y_tutor,
-    eliminar_mascota_y_tutor
+    eliminar_mascota_y_tutor,
+    trae_contrasena_encriptada_especialista,
+    trae_especialista,
+    especialista_ci
+
 };
 
  

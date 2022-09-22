@@ -21,11 +21,10 @@
         <td>{{@index}}</td>        
         <td>{{this.nombre_especialista}}</td>
         <td>{{this.cedula_de_identidad}}</td>
-        
-        
-      </tr>
-      {{/each}}<td><input type="checkbox" {{#if this.estado}} checked {{/if}} onclick="autorizar({{this.cedula_de_identidad}}, this)"></td>
 
+        <td><input type="checkbox" {{#if this.estado}} checked {{/if}} onclick="autorizar({{this.cedula_de_identidad}}, this)"></td>        
+      </tr>      
+      {{/each}}
     </tbody>
   </table>
 </div>

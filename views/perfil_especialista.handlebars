@@ -30,14 +30,16 @@
           <div class="form-group py-3">  
             <label>Correo</label>      
             <input type="text" name="correo_especialista" class="form-control w-50 m-auto" value="{{this.correo_especialista}}"> 
-          </div>          
+          </div> 
+          <label>Especialidad</label>
+          <select class="form-select mb-3 w-50 m-auto" name="especialidad" aria-label="Default select example" value="{{this.especialidad}}">
+            <option value="domestico">Domestico</option>
+            <option value="granja">Granja</option>
+            <option value="exotico">Exótico</option>
+          </select>          
           <div class="form-group py-3"> 
             <label>Credenciales</label>       
             <input type="text" name="credenciales" class="form-control w-50 m-auto" value="{{this.credenciales}}"> 
-          </div> 
-          <div class="form-group py-3">        
-            <label>Especialidad</label>
-            <input type="text" name="especialidad" class="form-control w-50 m-auto" value="{{this.especialidad}}">
           </div>                   
         </div>
         <br>

@@ -19,8 +19,7 @@ const {
     cambiar_estado_tutores, 
     muestra_especialistas, 
     cambiar_estado_especialistas,
-    trae_tutor,
-    trae_especialista,
+    trae_tutor,    
     eliminar_tutor,
     actualizar_tutor,
     nueva_mascota,
@@ -39,7 +38,10 @@ const {
     actualizar_mascota,
     trae_id_mascota,
     eliminar_ant_y_tutor,
-    eliminar_mascota_y_tutor
+    eliminar_mascota_y_tutor,
+    trae_contrasena_encriptada_especialista,
+    trae_especialista,
+    especialista_ci
     
      
 
@@ -49,6 +51,9 @@ const  { encripta, compara }  = require('./encriptador_tutor');
 const { genera_token, verifica_token } = require('./verificador_token');
 const { cookie } = require('./cookie');
 
+const { encripta_especialista, compara_especialista } = require('./encriptador_especialista');
+const { genera_token_especialista, verifica_token_especialista } = require('./verificador_token_especialista');
+const { CommandCompleteMessage } = require('pg-protocol/dist/messages');
 //servidor
 const puerto = process.env.PORT || 4000
 app.listen(puerto, console.log('servidor en puerto:', puerto));
@@ -163,30 +168,33 @@ app.get('/crear_cuenta_especialista', (req, res) => {
     res.render('crear_cuenta_especialista');
 })
 
-//ruta post para ingresar datos y crear nuevo especialista, debe redireccionar a inicio de sesion
+//ruta post para ingresar datos y crear nuevo especialista
 app.post('/nuevo_especialista', async (req, res) => {
-    const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales, perfil } = req.body;
-    const estado = false;    
+    const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales} = req.body;
+    const estado = false;
+    const perfil = 'especialista';    
     
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('no se encontro ningun archivo en la consulta');
-    }
+    } 
 
     const {files}=req
     const { foto }= files;
     const{name}= foto;    
-    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${name}`);
+    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${name}`);    
+    const contrasena_encriptada = await encripta_especialista(contrasena_especialista);  
         
     try {
-        const especialista = await nuevo_especialista( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, especialidad, credenciales, perfil, foto_especialista, estado );
+        
+        const especialista = await nuevo_especialista( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_encriptada, especialidad, credenciales, perfil, foto_especialista, estado);
         foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
             if (err) return res.status(500).send({
                 error: `algo salio mal... ${err}`,
                 code: 500
-            })
-            res.redirect('/inicio_sesion_especialista');            
+            }) 
+            res.status(200).json({ message: 'Bienvenido!! su cuenta ha sido creada' });                             
         })       
-           
+          
     } catch (e) {
         res.status(500).send({
             error: `Algo salio mal...${e}`,
@@ -404,7 +412,7 @@ app.post('/nueva_mascota', cookie, async (req, res) => {
     
 });
 
-//ruta get con formulario para compleatr antecedentes de  salud
+//ruta get con formulario para completar antecedentes de  salud
 app.get('/antecedentes', async (req, res) => {
     res.render('antecedentes')
 })
@@ -457,76 +465,89 @@ app.get('/inicio_sesion_especialista', (req, res) => {
 
 //ruta post inicio de sesion para especialista
 app.post('/inicio_sesion_especialista', async (req, res) => {
-    const { cedula_de_identidad, contrasena_especialista } = req.body; 
-    //console.log(req.body)   
-    const especialista = await trae_especialista(cedula_de_identidad, contrasena_especialista);   
-    if(especialista) {
-        if (especialista.estado) {
-            const token = jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + 180,
-                    data: especialista,
-                },secretKey
-            );             
-            res.redirect(`/perfil_especialista?token=${token}`);           
-            
-        } else {
-            res.status(401).send({
-                error: 'Este especialista se encuentra en evaluacion',
-                code: 401,
-            });
-        }                
-    } else {
+    const { cedula_de_identidad, contrasena_especialista } = req.body;     
+    if(!cedula_de_identidad || !contrasena_especialista) return res.status(400).json(({error: 'Faltan parametros'}))    
+    const especialista = await especialista_ci(cedula_de_identidad);   
+         
+    if(!especialista) {
         res.status(404).send({
             error: 'Este especialista no se ha registrado',
             code: 404,
-        });
-    }
+        }); 
+
+    }if (!especialista.estado) {        
+        res.status(401).send({
+        error: 'Este especialista se encuentra en evaluacion',
+        code: 401,
+        });               
+                         
+    } else {
+        const especialista_id = await trae_contrasena_encriptada_especialista(cedula_de_identidad);                 
+        contrasena_encriptada = especialista_id.contrasena_especialista;       
+        const compara_contrasena = await compara_especialista(contrasena_especialista, contrasena_encriptada); 
+        
+        if (compara_contrasena === false) {
+            res.status(401).send({
+                error: 'Credenciales incorrectas',
+                code: 401,
+            });
+        }
+        const especialista = await trae_especialista(cedula_de_identidad, contrasena_encriptada);        
+        const token = await genera_token_especialista(especialista);
+        res.cookie('retoken', token, {httpOnly: true});
+        res.redirect('/perfil_especialista');
+
+    }                
+   
 });
+
 
 //PERFIL ESPECIALISTA
 
-//ruta get con perfil de especialista, redirecciona ................................
-app.get('/perfil_especialista' , function (req, res) {
-    const { token } = req.query;
-    jwt.verify(token, secretKey, (err, decoded) => {
-        const { data } = decoded;
-        const { nombre_especialista, cedula_de_identidad, correo_especialista, especialidad, credenciales, foto_especialista } = data;
-        // console.log(data)       
-        err
-            ? res.status(401).send(
-                res.send({
-                    error: '401 Unauthorized',
-                    message: 'Usted no esta autorizado para estar aqui',
-                    token_error: err.message,
-                })
-            )
-            : res.render('perfil_especialista', { nombre_especialista, cedula_de_identidad, correo_especialista, especialidad, credenciales, foto_especialista });
-    });
+//ruta get con perfil de especialista, redirecciona 
+app.get('/perfil_especialista' , cookie, async (req, res) => { 
+    const token = await verifica_token_especialista(req.cookies.retoken);
+    const data = token.data;
+    const {nombre_especialista, cedula_de_identidad, correo_especialista, especialidad, credenciales, foto_especialista} = data;
+
+    res.render('perfil_especialista', {nombre_especialista, cedula_de_identidad, correo_especialista, especialidad, credenciales, foto_especialista });    
 });
 
 
 //eliminar datos de especialista
-app.delete('/eliminar_especialista/:cedula_de_identidad', async (req, res) => {          
-    const cedula_de_identidad = req.params.cedula_de_identidad;   
-    await eliminar_especialista(cedula_de_identidad);
-    res.send('Su datos han sido eliminados');   
+app.delete('/eliminar_especialista/:cedula_de_identidad', async (req, res) => {         
+    const cedula_de_identidad = req.params.cedula_de_identidad;
+    
+    try {
+        await eliminar_especialista(cedula_de_identidad);
+        res.status(200).json({ message: 'Su datos han sido eliminados' });        
+        
+    } catch (error) {
+        return res.status(500).json({ message: 'Ha ocurrido un error'});        
+    }           
 });
 
 //actualizar datos de especialista
-app.put('/actualizar_especialista/:cedula_de_identidad', async (req, res) => {      
-    const { cedula_de_identidad, correo_especialista, credenciales} = req.body;
-    // console.log(req.body)      
-    await actualizar_especialista(correo_especialista, credenciales, cedula_de_identidad);    
-    res.redirect('/lista_especialistas');   
+app.put('/actualizar_especialista/:cedula_de_identidad', async (req, res) => {       
+    const { nombre_especialista, correo_especialista, especialidad, credenciales, cedula_de_identidad  } = req.body;         
+    await actualizar_especialista(nombre_especialista, correo_especialista, especialidad, credenciales, cedula_de_identidad );    
+    res.status(200).json({ message: 'Sus datos han sido actualizados' });   
 })
 
 //LISTA DE ESPECIALISTAS
 
 
-app.get('/lista_especialistas', async(req, res) => {
+app.get('/lista_especialistas', cookie, async(req, res) => {
+    const token = await verifica_token(req.cookies.retoken);
+    const data = token.data;
+    const {id} = data;
+    // console.log(data)
+    const mascota = await trae_mascota(id);    
+    // console.log(mascota.tipo_mascota)
+    const tipo_mascota = mascota.tipo_mascota;   
+
     try {
-        const especialistas = await muestra_lista_especialistas();
-        // console.log(especialistas)   
+        const especialistas = await muestra_lista_especialistas(tipo_mascota);          
         res.render('lista_especialistas', { especialistas });     
     } catch (e) {
         res.status(500).send({
@@ -537,14 +558,15 @@ app.get('/lista_especialistas', async(req, res) => {
 });
 
 //ruta put que selecciona un especialista de la lista
-app.put('/seleccion_especialista', async (req, res)=>{
-    const { cedula_de_identidad } = req.body;
-    // console.log(req.body)    
+app.put('/seleccion_especialista', cookie, async (req, res)=>{
+    const { cedula_de_identidad } = req.body; 
+     
     try {
-        const especialista = await trae_datos_especialista(cedula_de_identidad);
-        // console.log(especialista)
+        const especialista = await trae_datos_especialista(cedula_de_identidad);        
+    console.log(especialista);
         
-        res.status(200).send(JSON.stringify(especialista));
+        res.render('contacto', { especialista });        
+        
     } catch (e) {
         res.status(500).send({
             error: `Algo salio mal...${e}`,
