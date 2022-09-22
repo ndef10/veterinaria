@@ -53,7 +53,7 @@ const { cookie } = require('./cookie');
 
 const { encripta_especialista, compara_especialista } = require('./encriptador_especialista');
 const { genera_token_especialista, verifica_token_especialista } = require('./verificador_token_especialista');
-const { CommandCompleteMessage } = require('pg-protocol/dist/messages');
+const send  = require('./correo');
 //servidor
 const puerto = process.env.PORT || 4000
 app.listen(puerto, console.log('servidor en puerto:', puerto));
@@ -97,6 +97,7 @@ app.engine(
 );
 app.set('view engine', 'handlebars');
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //RUTAS
 
@@ -118,6 +119,8 @@ app.post('/elige_perfil', async (req, res) => {
         res.redirect('crear_cuenta_especialista')
     }    
 })
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //CREAR CUENTA TUTOR
 
@@ -161,109 +164,6 @@ app.post('/nuevo_tutor', async (req, res) => {
     }           
 })
 
-//CREAR CUENTA ESPECIALISTA
-
-//ruta get con formulario para crear cuenta especialista
-app.get('/crear_cuenta_especialista', (req, res) => {
-    res.render('crear_cuenta_especialista');
-})
-
-//ruta post para ingresar datos y crear nuevo especialista
-app.post('/nuevo_especialista', async (req, res) => {
-    const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales} = req.body;
-    const estado = false;
-    const perfil = 'especialista';    
-    
-    if (Object.keys(req.files).length == 0) {
-        return res.status(400).send('no se encontro ningun archivo en la consulta');
-    } 
-
-    const {files}=req
-    const { foto }= files;
-    const{name}= foto;    
-    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${name}`);    
-    const contrasena_encriptada = await encripta_especialista(contrasena_especialista);  
-        
-    try {
-        
-        const especialista = await nuevo_especialista( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_encriptada, especialidad, credenciales, perfil, foto_especialista, estado);
-        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
-            if (err) return res.status(500).send({
-                error: `algo salio mal... ${err}`,
-                code: 500
-            }) 
-            res.status(200).json({ message: 'Bienvenido!! su cuenta ha sido creada' });                             
-        })       
-          
-    } catch (e) {
-        res.status(500).send({
-            error: `Algo salio mal...${e}`,
-            code: 500
-        })       
-    }           
-})
-
-//AUTORIZAR TUTORES
-
-//ruta que trae lista de tutores para su autorizacion
-app.get('/autorizacion_tutores', async (req, res) => {    
-    try {
-        const tutores = await muestra_tutores();   
-        res.render('autorizacion_tutores', { tutores });     
-    } catch (e) {
-        res.status(500).send({
-            error: `Algo salio mal...${e}`,
-            code: 500
-        });        
-    }
-})
-
-//ruta put que cambia estado de tutores
-app.put('/autorizacion_tutores', async (req, res)=>{
-    const { estado, cedula_de_identidad } = req.body;
-       
-    try {
-        const tutor = await cambiar_estado_tutores(estado, cedula_de_identidad);
-        res.status(200).send(tutor);
-    } catch (e) {
-        res.status(500).send({
-            error: `Algo salio mal...${e}`,
-            code: 500
-        })
-    }
-    
-})
-
-//AUTORIZAR ESPECIALISTAS
-
-//ruta que trae lista de especialistas para su autorizacion
-app.get('/autorizacion_especialistas', async (req, res) => {    
-    try {
-        const especialistas = await muestra_especialistas();           
-        res.render('autorizacion_especialistas', { especialistas });     
-    } catch (e) {
-        res.status(500).send({
-            error: `Algo salio mal...${e}`,
-            code: 500
-        });        
-    }
-})
-
-//ruta put que cambia estado de especialistas
-app.put('/autorizacion_especialistas', async (req, res)=>{
-    const { estado, cedula_de_identidad } = req.body;
-       
-    try {
-        const especialista = await cambiar_estado_especialistas(estado, cedula_de_identidad);
-        res.status(200).send(JSON.stringify(especialista));
-    } catch (e) {
-        res.status(500).send({
-            error: `Algo salio mal...${e}`,
-            code: 500
-        })
-    }
-    
-})
 
 //INICIO SESION TUTOR
 
@@ -271,7 +171,6 @@ app.put('/autorizacion_especialistas', async (req, res)=>{
 app.get('/inicio_sesion_tutor', (req, res) => {
     res.render('inicio_sesion_tutor');
 })
-
 
 //ruta post para iniciar sesion tutor, redirecciona al perfil del tutor con cookie
 app.post('/inicio_sesion_tutor', async (req, res) => {
@@ -361,6 +260,72 @@ app.put('/actualizar/:cedula_de_identidad', async (req, res) => {
     res.status(200).json({ message: 'Sus datos han sido actualizados' });   
 })
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//AUTORIZAR TUTORES
+
+//ruta que trae lista de tutores para su autorizacion
+app.get('/autorizacion_tutores', async (req, res) => {    
+    try {
+        const tutores = await muestra_tutores();   
+        res.render('autorizacion_tutores', { tutores });     
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        });        
+    }
+})
+
+//ruta put que cambia estado de tutores
+app.put('/autorizacion_tutores', async (req, res)=>{
+    const { estado, cedula_de_identidad } = req.body;
+       
+    try {
+        const tutor = await cambiar_estado_tutores(estado, cedula_de_identidad);
+        res.status(200).send(tutor);
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })
+    }
+    
+})
+
+//AUTORIZAR ESPECIALISTAS
+
+//ruta que trae lista de especialistas para su autorizacion
+app.get('/autorizacion_especialistas', async (req, res) => {    
+    try {
+        const especialistas = await muestra_especialistas();           
+        res.render('autorizacion_especialistas', { especialistas });     
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        });        
+    }
+})
+
+//ruta put que cambia estado de especialistas
+app.put('/autorizacion_especialistas', async (req, res)=>{
+    const { estado, cedula_de_identidad } = req.body;
+       
+    try {
+        const especialista = await cambiar_estado_especialistas(estado, cedula_de_identidad);
+        res.status(200).send(JSON.stringify(especialista));
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })
+    }
+    
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //ACCESO DENEGADO
 
 //ruta get con acceso denegado e invitacion a crear cuenta
@@ -368,6 +333,7 @@ app.get('/403', async (req, res) => {
     res.render('403');
 })
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //DATOS DE MASCOTA
 
@@ -454,7 +420,107 @@ app.post('/antecedentes_de_salud', cookie , async (req, res) => {
     }     
 })
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//ruta get que muestra datos de mascota
+app.get('/datos_mascota', cookie , async (req, res) => {
+    const token = await verifica_token(req.cookies.retoken);
+    const data = token.data;
+    const {id} = data;   
+    
+    try {
+    const mascota = await trae_mascota(id);            
+    const mascota_id = mascota.id
+    const antecedentes = await trae_antecedentes_mascota(mascota_id);
+    
+    res.render('datos_mascota', { mascota, antecedentes});  
+        
+    } catch (error) {        
+        res.send('aun no has registrado a tu mascota');               
+    }         
+});
+
+// eliminar datos de mascota
+app.delete('/eliminar_datos_mascota/:id', cookie, async (req, res) => {
+    const token = await verifica_token(req.cookies.retoken);
+    const data = token.data;
+    const {id} = data;
+    try {
+        const mascota = await trae_mascota(id);        
+        const mascota_id = mascota.id
+        await eliminar_antecedentes(mascota_id); 
+        await eliminar_mascota(mascota_id);
+        res.send('Los datos de su mascota han sido eliminados');  
+
+    } catch (error) {
+        res.send('no hay nada que eliminar');        
+    }      
+});
+
+// actualizar datos de mascota     
+app.put('/actualizar_datos_mascota/:id', cookie, async (req, res) => {
+    const token = await verifica_token(req.cookies.retoken);
+    const data = token.data;
+    const {id} = data;    
+    const { sintomas, edad, peso, tipo_de_alimentacion } = req.body;
+    const { nombre_mascota, tipo_mascota, especie } = req.body;
+    try {
+        const mascota = await trae_mascota(id);        
+        const mascota_id = mascota.id;        
+        const edad_num = +edad;
+        const peso_num = +peso;        
+        await actualizar_antecedentes(sintomas, edad_num, peso_num, tipo_de_alimentacion, mascota_id); 
+        await actualizar_mascota(nombre_mascota, tipo_mascota, especie, mascota_id);
+        res.send('Los datos de su mascota han sido actualizados');  
+    
+    } catch (error) {       
+            return res.status(403).json({ message: 'ha ocurrido un error'});        
+    }
+});
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//CREAR CUENTA ESPECIALISTA
+
+//ruta get con formulario para crear cuenta especialista
+app.get('/crear_cuenta_especialista', (req, res) => {
+    res.render('crear_cuenta_especialista');
+})
+
+//ruta post para ingresar datos y crear nuevo especialista
+app.post('/nuevo_especialista', async (req, res) => {
+    const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales} = req.body;
+    const estado = false;
+    const perfil = 'especialista';    
+    
+    if (Object.keys(req.files).length == 0) {
+        return res.status(400).send('no se encontro ningun archivo en la consulta');
+    } 
+
+    const {files}=req
+    const { foto }= files;
+    const{name}= foto;    
+    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${name}`);    
+    const contrasena_encriptada = await encripta_especialista(contrasena_especialista);  
+        
+    try {
+        
+        const especialista = await nuevo_especialista( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_encriptada, especialidad, credenciales, perfil, foto_especialista, estado);
+        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+            if (err) return res.status(500).send({
+                error: `algo salio mal... ${err}`,
+                code: 500
+            }) 
+            res.status(200).json({ message: 'Bienvenido!! su cuenta ha sido creada' });                             
+        })       
+          
+    } catch (e) {
+        res.status(500).send({
+            error: `Algo salio mal...${e}`,
+            code: 500
+        })       
+    }           
+})
 
 //INICIO SESION ESPECIALISTA
 
@@ -504,7 +570,7 @@ app.post('/inicio_sesion_especialista', async (req, res) => {
 
 //PERFIL ESPECIALISTA
 
-//ruta get con perfil de especialista, redirecciona 
+//ruta get con perfil de especialista 
 app.get('/perfil_especialista' , cookie, async (req, res) => { 
     const token = await verifica_token_especialista(req.cookies.retoken);
     const data = token.data;
@@ -559,14 +625,22 @@ app.get('/lista_especialistas', cookie, async(req, res) => {
 
 //ruta put que selecciona un especialista de la lista
 app.put('/seleccion_especialista', cookie, async (req, res)=>{
-    const { cedula_de_identidad } = req.body; 
+    const token = await verifica_token(req.cookies.retoken);
+    const data = token.data;
+    const {id} = data;
+    const mascota = await trae_mascota(id);   
+    const mascota_id = mascota.id;
+    const antecedentes = await trae_antecedentes_mascota(mascota_id)    
+    const { cedula_de_identidad } = req.body;    
      
     try {
-        const especialista = await trae_datos_especialista(cedula_de_identidad);        
-    console.log(especialista);
-        
-        res.render('contacto', { especialista });        
-        
+        const especialista = await trae_datos_especialista(cedula_de_identidad); 
+        const datos = {data, mascota, antecedentes, especialista};
+            
+        await send(datos)
+        // res.send('Su correo ha sido enviado');
+        return res.status(201).json({ message: 'Su correo ha sido enviado'});
+
     } catch (e) {
         res.status(500).send({
             error: `Algo salio mal...${e}`,
@@ -576,78 +650,7 @@ app.put('/seleccion_especialista', cookie, async (req, res)=>{
     
 })
 
-//ruta get, con formulario de contacto
-app.get('/contacto', async(req, res) => {
-    res.render('contacto');
-})
-
-
 ///////////////////////////////////////////////////////////////////////////
-
-// DATOS MASCOTA
-
-
-//ruta get que muestra datos de mascota
-app.get('/datos_mascota', cookie , async (req, res) => {
-    const token = await verifica_token(req.cookies.retoken);
-    const data = token.data;
-    const {id} = data;   
-    
-    try {
-    const mascota = await trae_mascota(id);            
-    const mascota_id = mascota.id
-    const antecedentes = await trae_antecedentes_mascota(mascota_id);
-    
-    res.render('datos_mascota', { mascota, antecedentes});  
-        
-    } catch (error) {        
-        res.send('aun no has registrado a tu mascota');               
-    }         
-});
-
-// eliminar datos de mascota
-app.delete('/eliminar_datos_mascota/:id', cookie, async (req, res) => {
-    const token = await verifica_token(req.cookies.retoken);
-    const data = token.data;
-    const {id} = data;
-    try {
-        const mascota = await trae_mascota(id);        
-        const mascota_id = mascota.id
-        await eliminar_antecedentes(mascota_id); 
-        await eliminar_mascota(mascota_id);
-        res.send('Los datos de su mascota han sido eliminados');  
-
-    } catch (error) {
-        res.send('no hay nada que eliminar');        
-    }      
-});
-
-//AQUI VOY
-
-// actualizar datos de mascota     
-app.put('/actualizar_datos_mascota/:id', cookie, async (req, res) => {
-    const token = await verifica_token(req.cookies.retoken);
-    const data = token.data;
-    const {id} = data;    
-    const { sintomas, edad, peso, tipo_de_alimentacion } = req.body;
-    const { nombre_mascota, tipo_mascota, especie } = req.body;
-    try {
-        const mascota = await trae_mascota(id);        
-        const mascota_id = mascota.id;        
-        const edad_num = +edad;
-        const peso_num = +peso;        
-        await actualizar_antecedentes(sintomas, edad_num, peso_num, tipo_de_alimentacion, mascota_id); 
-        await actualizar_mascota(nombre_mascota, tipo_mascota, especie, mascota_id);
-        res.send('Los datos de su mascota han sido actualizados');  
-    
-    } catch (error) {       
-            return res.status(403).json({ message: 'ha ocurrido un error'});        
-    }
-});
-
-
-//EN OBRA
-
 
 //agregar ruta get con notificacion de correos
 
