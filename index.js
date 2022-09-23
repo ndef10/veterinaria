@@ -1,11 +1,8 @@
 require('dotenv').config();
-// console.log(process.env)
 const express = require('express');
 const exphbs = require('express-handlebars');
 const expressFileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
-const secretKey = process.env.SECRETKEY;
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 
@@ -261,6 +258,30 @@ app.put('/actualizar/:cedula_de_identidad', async (req, res) => {
 })
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//ADMINISTRACION
+
+//ruta que trae vista de administarcion
+app.get('/administracion', async (req, res) => { 
+    res.render('administracion'); 
+    
+})
+
+//filtra usuarios
+app.post('/administracion', async (req, res) => {    
+    const { contrasena_funcionario, nombre_funcionario} = req.body;
+    if (contrasena_funcionario === process.env.ADMIN) {
+        res.render('admin_perfiles');
+    } else {
+        res.render('403');
+    };    
+});
+
+//vista de perfiles para autorizacion
+app.get('/admin_perfiles', async (req, res) => { 
+    res.render('admin_perfiles'); 
+    
+})
 
 //AUTORIZAR TUTORES
 
@@ -606,10 +627,8 @@ app.put('/actualizar_especialista/:cedula_de_identidad', async (req, res) => {
 app.get('/lista_especialistas', cookie, async(req, res) => {
     const token = await verifica_token(req.cookies.retoken);
     const data = token.data;
-    const {id} = data;
-    // console.log(data)
+    const {id} = data;    
     const mascota = await trae_mascota(id);    
-    // console.log(mascota.tipo_mascota)
     const tipo_mascota = mascota.tipo_mascota;   
 
     try {
@@ -638,9 +657,7 @@ app.put('/seleccion_especialista', cookie, async (req, res)=>{
         const datos = {data, mascota, antecedentes, especialista};
             
         await send(datos)
-        // res.send('Su correo ha sido enviado');
-        return res.status(201).json({ message: 'Su correo ha sido enviado'});
-
+        
     } catch (e) {
         res.status(500).send({
             error: `Algo salio mal...${e}`,
@@ -652,6 +669,5 @@ app.put('/seleccion_especialista', cookie, async (req, res)=>{
 
 ///////////////////////////////////////////////////////////////////////////
 
-//agregar ruta get con notificacion de correos
 
 

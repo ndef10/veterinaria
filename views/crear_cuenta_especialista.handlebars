@@ -44,14 +44,33 @@
 
         <div class="form-group col-12 col-sm-12">
           <p class="text-white pb-3">Sube tu foto de perfil</p><br>            
-          <input type="file" name="foto" onchange="previewFile()"><br>
-          <img src="/" height="200" alt="image preview">
+          <input type="file" name="foto" onchange="previewFile()"><br>          
         </div>
 
-        <button class="btn btn-danger my-3 py- w-50 m-auto">Guardar</button>   
+        <button class="btn btn-danger my-3 py- w-50 m-auto">Guardar</button>
+        <br>
+        <p>¿Ya estás registrado? <a href="./inicio_sesion_especialista">Inicia sesion</a></p>   
       </form>
     </div>
   </div>
 </div>
+
+<script>
+
+  function previewFile() {
+    const preview = document.getElementById('pw');
+    const file = document.querySelector('input[type=file').files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener("load", () => {
+      preview.src = reader.result;
+    }, false);
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+  
+</script>
 
 

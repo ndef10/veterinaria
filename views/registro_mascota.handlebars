@@ -12,7 +12,7 @@
       <br>
 
       <form action="/nueva_mascota" method="POST" enctype="multipart/form-data">
-        {{!-- <input type="hidden" name="_method" value="PUT"> --}}
+        {{> card_logo}}
         <div>                
           <img id="foto-perfil" src="{{this.foto_mascota}}">                
         </div>
@@ -34,13 +34,12 @@
         </div>
           <div class="form-group col-12 col-sm-12">
             <p class=" text-white mb-2">Foto de perfil</p><br>            
-            <input type="file" name="foto" onchange="previewFile()"><br>
-            <img src="/" height="200" alt="image preview">
+            <input type="file" name="foto" onchange="previewFile()"><br>                       
           </div>      
    
           <button class="btn btn-danger my-4 py-2 w-50 m-auto">Siguiente</button>
           <br>
-          <a href="./antecedentes">Completa sus antecedentes de salud</a></p>        
+          <a href="./">Página principal</a></p>        
       </form>    
     </div>
   </div>
@@ -49,7 +48,7 @@
 <script>
 
   function previewFile() {
-    const preview = document.querySelector('img');
+    const preview = document.querySelector('pw');
     const file = document.querySelector('input[type=file').files[0];
     const reader = new FileReader();
 

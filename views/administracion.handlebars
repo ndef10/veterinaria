@@ -1,0 +1,28 @@
+<style>#cabecera { width: 100%;}</style></header>
+<div class="col-12 bg-black mt-5">
+  <div class="py-5 text-center">
+  <h1>Administración</h1>
+  <br>
+  {{> card_logo}} 
+
+  <form action="/administracion" method="POST">
+  <div class="align-left">
+    <div class="form-group">
+           <div class="form-group">       
+            <input type="text"  name="nombre_funcionario" placeholder="Nombre funcionario" class="form-control w-50 m-auto" />
+          </div>
+          
+          <div class="form-group pt-4">        
+            <input type="password" name="contrasena_funcionario" placeholder="Contreseña" class="form-control w-50 m-auto">
+          </div>
+                 
+        </div>
+  </div>
+    
+  <div>
+    <button class="btn btn-danger mt-5 mb-2 py-2 w-50 m-auto">Ingresar</button>
+  </div>
+   <a  href="./">Página principal</a>
+         
+  </form>
+</div>
