@@ -38,9 +38,7 @@ const {
     eliminar_mascota_y_tutor,
     trae_contrasena_encriptada_especialista,
     trae_especialista,
-    especialista_ci
-    
-     
+    especialista_ci     
 
 } = require('./database');
 
@@ -50,7 +48,8 @@ const { cookie } = require('./cookie');
 
 const { encripta_especialista, compara_especialista } = require('./encriptador_especialista');
 const { genera_token_especialista, verifica_token_especialista } = require('./verificador_token_especialista');
-const send  = require('./correo');
+// const enviar  = require('./correo');
+const enviar = require('./correo');
 //servidor
 const puerto = process.env.PORT || 4000
 app.listen(puerto, console.log('servidor en puerto:', puerto));
@@ -130,22 +129,43 @@ app.get('/crear_cuenta_tutor', (req, res) => {
 app.post('/nuevo_tutor', async (req, res) => {
     const { nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_tutor, repita_contrasena} = req.body;
     const estado = false;
-    const perfil = 'tutor';    
-    
-    if (Object.keys(req.files).length == 0) {
-        return res.status(400).send('no se encontro ningun archivo en la consulta');
-    } 
+    const perfil = 'tutor';
 
-    const {files}=req
+    if (!nombre_tutor || !cedula_de_identidad || !telefono || !correo_tutor || !contrasena_tutor || !repita_contrasena ) {
+        return res.status(400).send('Faltan parámetros')
+    }    
+            
+    if (contrasena_tutor != repita_contrasena) {
+        return res.status(418).send('Debe repetir la misma contraseña para crear su cuenta')
+    }    
+    
+    const {files}=req;
+    if (!req.files) {
+        return res.status(400).send('Debe ingresar una foto de perfil')
+    }
+
     const { foto }= files;
-    const{name}= foto;    
-    const foto_tutor = (`http://localhost:`+ puerto +`/uploads/${name}`);    
-    const contrasena_encriptada = await encripta(contrasena_tutor);  
-        
+    if (!foto || foto == null) {
+        return res.status(400).send('Error al ingresar foto de perfil')
+
+    }
+    const [file_tipo, file_extension] = foto.mimetype.split('/');
+    if (file_tipo !== 'image') {
+        return res.status(400).send('Solo se aceptan formatos de imagen')
+    }
+    const valida_extesion = ['jpg', 'jpeg', 'png', 'webp'];
+    if (!valida_extesion.includes(file_extension)) {
+        return res.status(400).send('Formato de imagen no válido');
+    }
+
+    const{nombre}= foto;    
+    const foto_tutor = (`http://localhost:`+ puerto +`/uploads/${nombre}`);    
+    const contrasena_encriptada = await encripta(contrasena_tutor);    
+            
     try {
         
         const tutor = await nuevo_tutor( nombre_tutor, cedula_de_identidad, telefono, correo_tutor, contrasena_encriptada, perfil, foto_tutor, estado );
-        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+        foto.mv(`${__dirname}/public/uploads/${nombre}`, async (err) => {
             if (err) return res.status(500).send({
                 error: `algo salio mal... ${err}`,
                 code: 500
@@ -370,19 +390,28 @@ app.post('/nueva_mascota', cookie, async (req, res) => {
     const {id} = data;   
     const { nombre_mascota, tipo_mascota, especie } = req.body;
     const tutor_id = id;
-
-    if (Object.keys(req.files).length == 0) {
-        return res.status(400).send('no se encontro ningun archivo en la consulta');
+    
+    if (!nombre_mascota || !tipo_mascota || !especie ) {
+        return res.status(400).send('Faltan parámetros')
     }
 
-    const {files}=req
-    const { foto }= files;
-    const{name}= foto;    
-    const foto_mascota = (`http://localhost:`+ puerto +`/uploads/${name}`);
+    const {files}=req    
+    if (!req.files) {
+        return res.status(400).send('Debe ingresar una foto de su mascota')
+    }
+
+    const { foto } = files;
+    if (!foto || foto == null) {
+        return res.status(400).send('Error al ingresar foto de su mascota')
+
+    }
+
+    const{nombre} = foto;    
+    const foto_mascota = (`http://localhost:`+ puerto +`/uploads/${nombre}`);
     
     try {
         const mascota = await nueva_mascota( tutor_id, nombre_mascota, tipo_mascota, especie, foto_mascota );                
-        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+        foto.mv(`${__dirname}/public/uploads/${nombre}`, async (err) => {
             if (err) return res.status(500).send({
                 error: `algo salio mal... ${err}`,
                 code: 500
@@ -414,18 +443,28 @@ app.post('/antecedentes_de_salud', cookie , async (req, res) => {
     const mascota_id = mascota.id;
         
     const { sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle } = req.body;
-    
-    if (Object.keys(req.files).length == 0) {
-        return res.status(400).send('no se encontro ningun archivo en la consulta');
-    }  
+
+    if (!sintomas || !edad || !peso || !tipo_de_alimentacion || !es_vacunado || !es_esterilizado) {
+        return res.status(400).send('Faltan parámetros')
+    }
+     
     const {files}=req
+    if (!req.files) {
+        return res.status(400).send('Debe ingresar una foto del estado actual de su mascota')
+    }
+
     const { foto }= files;
-    const{name}= foto;    
-    const img_estado_actual = (`http://localhost:`+ puerto +`/uploads/${name}`);
+    if (!foto || foto == null) {
+        return res.status(400).send('Error al ingresar foto de estado actual de su mascota')
+
+    }
+
+    const{nombre}= foto;    
+    const img_estado_actual = (`http://localhost:`+ puerto +`/uploads/${nombre}`);
     
     try {
         const antecedente = await antecedentes_salud( mascota_id, sintomas,edad, peso, tipo_de_alimentacion, es_vacunado, es_esterilizado, operaciones_detalle, img_estado_actual);
-        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+        foto.mv(`${__dirname}/public/uploads/${nombre}`, async (err) => {
             if (err) return res.status(500).send({
                 error: `algo salio mal... ${err}`,
                 code: 500
@@ -512,22 +551,35 @@ app.get('/crear_cuenta_especialista', (req, res) => {
 app.post('/nuevo_especialista', async (req, res) => {
     const { nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_especialista, repita_contrasena, especialidad, credenciales} = req.body;
     const estado = false;
-    const perfil = 'especialista';    
+    const perfil = 'especialista';  
     
-    if (Object.keys(req.files).length == 0) {
-        return res.status(400).send('no se encontro ningun archivo en la consulta');
-    } 
+    if (!nombre_especialista || !cedula_de_identidad || !correo_especialista || !contrasena_especialista || !repita_contrasena || !especialidad || !credenciales) {
+        return res.status(400).send('Faltan parámetros')
+    }    
+            
+    if (contrasena_especialista != repita_contrasena) {
+        return res.status(418).send('Debe repetir la misma contraseña para crear su cuenta')
+    }    
 
-    const {files}=req
+    const {files}=req;
+    if (!req.files) {
+        return res.status(400).send('Debe ingresar una foto de perfil')
+    }
+
     const { foto }= files;
-    const{name}= foto;    
-    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${name}`);    
+    if (!foto || foto == null) {
+        return res.status(400).send('Error al ingresar foto de perfil')
+
+    }
+
+    const{nombre}= foto;    
+    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${nombre}`);    
     const contrasena_encriptada = await encripta_especialista(contrasena_especialista);  
         
     try {
         
         const especialista = await nuevo_especialista( nombre_especialista, cedula_de_identidad, correo_especialista, contrasena_encriptada, especialidad, credenciales, perfil, foto_especialista, estado);
-        foto.mv(`${__dirname}/public/uploads/${name}`, async (err) => {
+        foto.mv(`${__dirname}/public/uploads/${nombre}`, async (err) => {
             if (err) return res.status(500).send({
                 error: `algo salio mal... ${err}`,
                 code: 500
@@ -656,7 +708,7 @@ app.put('/seleccion_especialista', cookie, async (req, res)=>{
         const especialista = await trae_datos_especialista(cedula_de_identidad); 
         const datos = {data, mascota, antecedentes, especialista};
             
-        await send(datos)
+        await enviar(datos)
         
     } catch (e) {
         res.status(500).send({

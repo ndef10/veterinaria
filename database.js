@@ -319,7 +319,7 @@ async function muestra_lista_especialistas(tipo_mascota) {
 
 }
 
-async function trae_datos_especialista(cedula_de_identidad) {
+async function trae_datos_especialista(cedula_de_identidad) {   
     const consulta = {
         text: 'SELECT * FROM especialista WHERE cedula_de_identidad = $1',
         values: [cedula_de_identidad]
@@ -360,7 +360,7 @@ module.exports = {
     eliminar_mascota_y_tutor,
     trae_contrasena_encriptada_especialista,
     trae_especialista,
-    especialista_ci
+    especialista_ci    
 
 };
 

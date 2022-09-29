@@ -8,7 +8,7 @@ let transporter = nodemailer.createTransport({
     },
 });
 
-const send = async (datos) => {    
+const enviar = async (datos) => {    
     const correo_especialista = datos.especialista.correo_especialista;
     const correo_tutor = datos.data.correo_tutor;
     const nombre_mascota = datos.mascota.nombre_mascota;
@@ -57,4 +57,4 @@ const send = async (datos) => {
     
 };
 
-module.exports = send;
+module.exports = enviar;
