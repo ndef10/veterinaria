@@ -158,7 +158,8 @@ app.post('/nuevo_tutor', async (req, res) => {
         return res.status(400).send('Formato de imagen no válido');
     }
 
-    const{nombre}= foto;    
+    const nombre= foto.name;  
+    console.log(nombre);  
     const foto_tutor = (`http://localhost:`+ puerto +`/uploads/${nombre}`);    
     const contrasena_encriptada = await encripta(contrasena_tutor);    
             
@@ -406,8 +407,21 @@ app.post('/nueva_mascota', cookie, async (req, res) => {
 
     }
 
-    const{nombre} = foto;    
-    const foto_mascota = (`http://localhost:`+ puerto +`/uploads/${nombre}`);
+    const [file_tipo, file_extension] = foto.mimetype.split('/');
+    if (file_tipo !== 'image') {
+        return res.status(400).send('Solo se aceptan formatos de imagen')
+    }
+
+    const valida_extesion = ['jpg', 'jpeg', 'png', 'webp'];
+    if (!valida_extesion.includes(file_extension)) {
+        return res.status(400).send('Formato de imagen no válido');
+    }
+    
+    const nombre= `foto_${nombre_mascota}_${Date.now()}.${file_extension}`;      
+    const foto_mascota = (`http://localhost:`+ puerto +`/uploads/${nombre}`); 
+
+    // const nombre= foto.name;     
+    // const foto_mascota = (`http://localhost:`+ puerto +`/uploads/${nombre}`);
     
     try {
         const mascota = await nueva_mascota( tutor_id, nombre_mascota, tipo_mascota, especie, foto_mascota );                
@@ -458,8 +472,8 @@ app.post('/antecedentes_de_salud', cookie , async (req, res) => {
         return res.status(400).send('Error al ingresar foto de estado actual de su mascota')
 
     }
-
-    const{nombre}= foto;    
+    
+    const nombre= foto.name;     
     const img_estado_actual = (`http://localhost:`+ puerto +`/uploads/${nombre}`);
     
     try {
@@ -572,8 +586,19 @@ app.post('/nuevo_especialista', async (req, res) => {
 
     }
 
-    const{nombre}= foto;    
-    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${nombre}`);    
+    const [file_tipo, file_extension] = foto.mimetype.split('/');
+    if (file_tipo !== 'image') {
+        return res.status(400).send('Solo se aceptan formatos de imagen')
+    }
+
+    const valida_extesion = ['jpg', 'jpeg', 'png', 'webp'];
+    if (!valida_extesion.includes(file_extension)) {
+        return res.status(400).send('Formato de imagen no válido');
+    }
+    
+    const nombre= `foto_${nombre_especialista}_${Date.now()}.${file_extension}`;      
+    const foto_especialista = (`http://localhost:`+ puerto +`/uploads/${nombre}`); 
+       
     const contrasena_encriptada = await encripta_especialista(contrasena_especialista);  
         
     try {

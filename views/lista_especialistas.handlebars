@@ -20,7 +20,7 @@
         <td>{{@index}}</td>
         <td>
           <div>                
-            <img class="rounded-circle" src="{{this.foto_especialista}}" height="55" Width="75">                
+            <img class="rounded-circle" src="{{this.foto_especialista}}" height="100" Width="100">                
           </div>
         </td>
         <td>{{this.nombre_especialista}}<br>{{this.especialidad}}<br>{{this.credenciales}}<br></td> 
@@ -40,7 +40,6 @@
 
 
 <script>
-
   const autorizar = async (cedula_de_identidad, e) => {    
     const seleccion = e.checked
     console.log(cedula_de_identidad, seleccion);
