@@ -16,13 +16,36 @@ label {
     border-radius: 150px 150px 150px 150px;
 
 }
+
+img {
+    object-fit: cover;
+}
+
+#contenedor_imagen { 
+    /* margin-top: auto; */
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    height: 600px; 
+    width: 600px;
+    object-fit: cover;
+    margin-bottom: 40px;
+}
+
+#margen {
+    margin-top: 10px;
+    background-color: #030404;
+}
+
+#ficha{
+    background-color: #030404;
+}
 /* relleno */
-.iguana {    
-    width: 250px;
-    height: 250px;
+.iguana {
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    width: 250px;   
     margin: 20px;
-    border-radius: 250px 250px 250px 250px;
-    
+    padding: 10px;
 }
 .card {
     background-color: #625b5b;

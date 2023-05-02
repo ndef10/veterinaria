@@ -6,7 +6,8 @@
   <table class="table table-dark w-80 m-auto">
     <thead>
       <tr>
-        <th scope="col">#</th>        
+        <th scope="col">#</th> 
+        <th scope="col">Foto</th>
         <th scope="col">Nombre</th>
         <th scope="col">Cedula de identidad</th>                      
         <th scope="col">Estado</th>
@@ -18,7 +19,8 @@
 
       {{#each especialistas}}
       <tr>
-        <td>{{@index}}</td>        
+        <td>{{@index}}</td>  
+        <td><img id="foto_perfil" src="{{this.foto_especialista}}"></td>      
         <td>{{this.nombre_especialista}}</td>
         <td>{{this.cedula_de_identidad}}</td>
 

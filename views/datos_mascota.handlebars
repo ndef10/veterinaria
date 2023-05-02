@@ -2,14 +2,18 @@
   <style>#cabecera { width: 100%;}</style>
 
   <div class="row">
-    <div class="col-6 mt-5"> 
-      <img src="{{this.mascota.foto_mascota}}" height="100%" Width="100%"> 
+    <div class="col-6 mt-5 mt-5 py-5 text-center" id="margen">       
+            <h1 class="display-4">Estos son los datos de {{this.mascota.nombre_mascota}}</h1>           
+            <hr class="my-4">
+            <img src="{{this.mascota.foto_mascota}}" height="100%" Width="100%" id="contenedor_imagen">
+            <h4>Sube la mejor foto de {{this.mascota.nombre_mascota}} a nuestra galeria</h4>
+            <h4>y participa en nustro concurso</h4>
+            <h4>Tenemos excelentes premios!!</h4>
+            <a href="https://sp.depositphotos.com/free-files/animales.html" class="btn btn-primary btn-lg my-4">Participa</a>
+            <br>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime modi fuga aliquid. At tempora, doloribus obcaecati velit facilis cum enim.</p>    
     </div>
-    <div class="responsivo col-6 bg-black mt-5 py-5 text-center">
-      <h1>Datos de tu mascota</h1>
-      <h1>{{this.mascota.nombre_mascota}}</h1>
-      <br>
-
+    <div class="responsivo col-6 bg-black mt-5 py-5 text-center">      
       <form action="/actualizar_datos_mascota/{{this.mascota.id}}?_method=PUT" method="POST">
         <input type="hidden" name="_method" value="PUT">
         <div class="form-group">
