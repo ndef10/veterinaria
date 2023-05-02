@@ -1,5 +1,5 @@
 # Bienvenidos a la Veterinaria en línea
-Este es un sitio web donde puedes realizar consultas sobre la salud de tu mascota a un especialista en veterinaria, sin tener que salir de tu hogar.
+Este sitio web fue creado como proyecto final individual durante el bootcamp. Aquí puedes realizar consultas sobre la salud de tu mascota con un especialista en veterinaria, sin tener que salir de tu hogar.
 
 ## Cómo funciona
 Completa el formulario de consulta en línea, proporcionando información detallada sobre tu mascota, como la edad, síntomas y cualquier otro detalle relevante.
