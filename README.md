@@ -1,36 +1,48 @@
-# Veterinaria
-Proyecto final
+Bienvenidos a la Veterinaria en línea
+Este es un sitio web donde puedes realizar consultas sobre la salud de tu mascota a un especialista en veterinaria, sin tener que salir de tu hogar.
+
+Cómo funciona
+Completa el formulario de consulta en línea, proporcionando información detallada sobre tu mascota, como la edad, síntomas y cualquier otro detalle relevante.
+
+Un especialista en veterinaria revisará tu formulario y te enviará un correo electrónico con su diagnóstico y recomendaciones para el tratamiento.
+
+Si es necesario, el especialista puede solicitar información adicional o programar una cita en persona para examinar a tu mascota más de cerca.
+
+Requisitos
+Para realizar una consulta en línea, necesitarás:
+
+Acceso a internet
+Una dirección de correo electrónico válida
+Política de privacidad
+La privacidad y seguridad de tus datos son importantes para nosotros. No compartiremos tu información personal con terceros sin tu consentimiento explícito.
+
+Preguntas frecuentes
+¿Cuánto cuesta una consulta en línea?
+Actualmente, estamos ofreciendo consultas en línea de forma gratuita.
+
+¿Puedo realizar una consulta en línea si vivo fuera de la ciudad?
+Sí, puedes realizar una consulta en línea desde cualquier lugar con acceso a internet.
+
+¿Cuánto tiempo tardaré en recibir una respuesta?
+Intentamos responder a todas las consultas lo antes posible, generalmente dentro de las 24 horas siguientes a su envío. Sin embargo, el tiempo de respuesta puede variar según la cantidad de consultas que recibimos.
 
 
-Hito 1 - Etapa de Ideación y Setup
 
-Requerimientos:
 
-1. Identifica las historias de usuario en base a la necesidad detectada, genera las
-tarjetas en Trello y ordénalas en base al proceso de desarrollo. (3 Puntos)
+
+
+
+
+# Seguimiento de ejecucuion
 
 [Link de Trello](https://trello.com/invite/b/LD1YWwRy/3172ae468292bc4d56dbf51d02c49814/proyecto-consulta-veterinaria)
 
-2. Configura la carpeta del proyecto e inicializa GIT en ella, luego instala Express y
-establece la conexión con PostgreSQL. (1 Punto)
-
-3. Diseña la estructura de la base de datos (db) y la lógica de negocios. Deberás
-generar un diagrama UML con el modelo de cada una de las tablas con sus
-correspondientes columnas y relaciones. (2 Puntos)
-
-4. Crea las migraciones de la base de datos (db) a partir de la estructura generada en el
-punto anterior. Cada migración deberá estar en un archivo independiente, dentro de
-una carpeta y ordenadas en base al orden de migración (antepone un número al
-nombre del archivo para forzar su orden). (2 Puntos)
-
-5. Crea el diseño de la aplicación a nivel de prototipo. No es necesario que sea algo
-muy detallado, incluso puede ser un layout o un wireframe realizado en Figma. Lo
-importante es que ese diseño dé una idea de qué contenidos se implementarán y
-dónde se ubicarán. (1 Punto)
 
 [Link de figma](https://www.figma.com/file/If72xKyBLuY6ASvL7ndJzp/CONSULTA-VETERINARIA?node-id=0%3A1)
 
-6. Instala las dependencias necesarias tales como: Handlebars, Framework CSS
-(Bootstrap, Tailwind, Foundation) o cualquier otra que vayas a utilizar. (1 Punto)
+# Demo 
+
+(https://www.loom.com/share/fed37009009e4e24896b0301e127930f)
+
 
 
