@@ -27,7 +27,7 @@ Sí, puedes realizar una consulta en línea desde cualquier lugar con acceso a i
 Intentamos responder a todas las consultas lo antes posible, generalmente dentro de las 24 horas siguientes a su envío. Sin embargo, el tiempo de respuesta puede variar según la cantidad de consultas que recibimos.
 
 
-# Seguimiento de ejecucuion
+# Seguimiento de ejecucuión
 
 [Link de Trello](https://trello.com/invite/b/LD1YWwRy/3172ae468292bc4d56dbf51d02c49814/proyecto-consulta-veterinaria)
 
