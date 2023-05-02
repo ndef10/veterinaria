@@ -4,7 +4,7 @@ Este es un sitio web donde puedes realizar consultas sobre la salud de tu mascot
 ## Cómo funciona
 Completa el formulario de consulta en línea, proporcionando información detallada sobre tu mascota, como la edad, síntomas y cualquier otro detalle relevante.
 
-Un especialista en veterinaria de tu elección rebisará sus antecedentes y te enviará un correo electrónico con su diagnóstico y recomendaciones para el tratamiento.
+Un especialista en veterinaria de tu elección revisará sus antecedentes y te enviará un correo electrónico con su diagnóstico y recomendaciones para el tratamiento.
 
 Si es necesario, el especialista puede solicitar información adicional o programar una cita en persona para examinar a tu mascota más de cerca.
 
